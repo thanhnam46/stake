@@ -16,19 +16,21 @@ async function main() {
   // We get the contract to deploy
   const FestakedWithReward = await hre.ethers.getContractFactory("FestakedWithReward",{
     libraries: {
-      FestakedLib: "0x4a82768Db3cB87aF402F5882566AbD31cB8d901f",
+      // FestakedLib: "0x4a82768Db3cB87aF402F5882566AbD31cB8d901f", // Rinkeby Lib
+      FestakedLib: "0x5480516E1393D45cc1ADeD2Eb2d7fC30429E4F7f", // bscTestnet Lib
     },
   });
   const stakingContract = await FestakedWithReward.deploy(
     "Nam test Staking contract 1", //Name
-    "0x2d5cC8299128c2a44a2514809c5C4FD98F6D134a", //token address
-    "0x2d5cC8299128c2a44a2514809c5C4FD98F6D134a", //rewardTokenAddress_
+    "0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83", //token address
+    "0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83", //rewardTokenAddress_
     "1649840450", //stakingStarts_
     "1649926850", //stakingEnds_
     "1650018485", //withdrawStarts_
     "1650104885", //withdrawEnds_
     "80000000000000000000", //stakingCap_
-    {gasLimit: 10000000}    
+    //{gasLimit: 10000000}    //rinkeby
+    {gasLimit: 10000000}    //bscTestnet
     );
 
   await stakingContract.deployed();
