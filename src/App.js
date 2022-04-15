@@ -5,7 +5,14 @@ import FestakedWithReward from './artifacts/contracts/FestakedWithReward.sol/Fes
 const FestakedWithRewardAddress = '0xbE7E299bB3c2c3B0e436A54935365B9aFF26EB04'
 
 function App() {
-  const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545"); 
+  const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545")
+
+  async function connectWallet() {
+    if (typeof window.ethereum !== 'undefined') {
+      console.log('MetaMask is installed!')
+      window.ethereum.request({ method: 'eth_requestAccounts' });
+    }
+  }
 
   return (
     <div className="App">
@@ -13,7 +20,7 @@ function App() {
         <img className='logo' src='https://imgur.com/Qxw1soD.jpeg' alt='logo'></img>
         <a href='#' className='links'>Transaction</a>
         <a href='#' className='links'>Staking Options</a>
-        <a href='#' className='connectWalletBtn links'>Connect Wallet</a>
+        <a href='#' className='connectWalletBtn links' onClick={connectWallet}>Connect Wallet</a>
       </header>
       <div className='container'>
         <div className='content'>
@@ -21,7 +28,7 @@ function App() {
             <p>SPO-BSC Short Term</p>
             <p>Connected to BSC network</p>
             <p>YOUR ADDRESS</p>
-            <p>{web3.currentProvider.selectedAddress}</p>
+            <p>{window.ethereum.selectedAddress}</p>
           </div>
           <div className='poolInfor'>
             <ul>
