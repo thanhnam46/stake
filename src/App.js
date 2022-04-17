@@ -52,6 +52,7 @@ function App() {
 
   //Work with contract
   const web3 = new Web3('https://data-seed-prebsc-1-s1.binance.org:8545/')
+  web3.eth.setProvider(Web3.givenProvider); //chuyen sang MM provider, neu khong se gap loi Returned error: unknown account
   const contract = new web3.eth.Contract(FestakedWithReward.abi, stakingContractAddr)
 
   // Your staked balance
@@ -99,8 +100,8 @@ function App() {
       await contract.methods.stake(parseInt(amount)).send({ from: account}, (error, hash) => {
         if (error) {
           console.log(error)
-          console.log(amount)
-          console.log(account)
+        }else{
+          console.log(hash)
         }
       })
     }
@@ -122,9 +123,9 @@ function App() {
           <div className='stakeBox'>
             <p><span className='boldText'>SPO-BSC Short Term X</span></p>
             <p>{chain}</p>
-            <p>YOUR ADDRESS</p>
+            <p><span className='boldText'>YOUR ADDRESS</span></p>
             <p>{account}</p>
-            <p>CONTRACT ADDRESS</p>
+            <p><span className='boldText'>CONTRACT ADDRESS</span></p>
             <p>{stakingContractAddr}</p>
             <input className='amount' />
             <a href='#' className='btn' onClick={stake}>Stake</a>
