@@ -1,20 +1,17 @@
 import './App.css'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Web3 from "web3/dist/web3.min"
 import FestakedWithReward from './artifacts/contracts/FestakedWithReward.sol/FestakedWithReward.json'
+import tokenContract from './artifacts/contracts/tokenContract/tokenContract.json'
 
 const stakingContractAddr = '0x1FE470E4E533EeA525b2f2c34a9EbB995597C143'
 
 function App() {
   const [account, setAccount] = useState('0x0000000000000000000000000000000000000000')
-  const [yourStakedBalance, setYourStakedBalance] = useState('')
-
-
+  connectMM()
   async function connectMM() {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    setAccount(() => {
-      return accounts[0]
-    })
+    setAccount(accounts[0])
 
     //Change the UI
     document.querySelector('.disconnect').style.display = 'block';
@@ -50,68 +47,100 @@ function App() {
     window.location.reload();
   });
 
-  //Work with contract
+  //Work with staking contract
   const web3 = new Web3('https://data-seed-prebsc-1-s1.binance.org:8545/')
   web3.eth.setProvider(Web3.givenProvider); //chuyen sang MM provider, neu khong se gap loi Returned error: unknown account
-  const contract = new web3.eth.Contract(FestakedWithReward.abi, stakingContractAddr)
+  const stakingContract = new web3.eth.Contract(FestakedWithReward.abi, stakingContractAddr)
 
 
 
   // Your staked balance
-  contract.methods.stakeOf(account).call((error, result) => {
-    setYourStakedBalance(result)
+  const [yourStakedBalance, setYourStakedBalance] = useState('')
+  stakingContract.methods.stakeOf(account).call((error, result) => {
+    setYourStakedBalance(result / 1e18)
   })
 
   // Pool Name
   const [poolName, setPoolName] = useState('')
-  contract.methods.name().call((error, result) => {
+  stakingContract.methods.name().call((error, result) => {
     setPoolName(result)
   })
 
   // Get staking cap
   const [stakingCap, setStakingCap] = useState('')
-  contract.methods.stakingCap().call((error, result) => {
-    setStakingCap(result / 10e18)
+  stakingContract.methods.stakingCap().call((error, result) => {
+    setStakingCap(result / 1e18)
   })
 
   // Staked so far
   const [stakedBalance, setStakedBalance] = useState('')
-  contract.methods.stakedBalance().call((error, result) => {
-    setStakedBalance(result)
+  stakingContract.methods.stakedBalance().call((error, result) => {
+    setStakedBalance(result / 1e18)
+  })
+
+  // Staking start
+  const [stakingStart, setstakingStart] = useState('')
+  stakingContract.methods.stakingStarts().call((error, result) => {
+    setstakingStart(new Date(result * 1000).toLocaleString())
   })
 
   // Contribution close
   const [stakingEnds, setstakingEnds] = useState('')
-  contract.methods.stakingEnds().call((error, result) => {
+  stakingContract.methods.stakingEnds().call((error, result) => {
     setstakingEnds(new Date(result * 1000).toLocaleString())
   })
 
   // Early Withdraw open
   const [earlyWithdraw, setEarlyWithdraw] = useState('')
-  contract.methods.withdrawStarts().call((error, result) => {
+  stakingContract.methods.withdrawStarts().call((error, result) => {
     setEarlyWithdraw(new Date(result * 1000).toLocaleString())
   })
 
   // Maturity at
   const [maturityAt, setMaturityAt] = useState('')
-  contract.methods.withdrawEnds().call((error, result) => {
+  stakingContract.methods.withdrawEnds().call((error, result) => {
     setMaturityAt(new Date(result * 1000).toLocaleString())
   })
 
   // Stake
+  const [txHash, setTxHash] = useState('')
+  const tokenAddr = '0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83'
+  const tokenNPO = new web3.eth.Contract(tokenContract.abi, tokenAddr)
+
   async function stake() {
-    connectMM()
-    const amount = await document.querySelector('.amount').value
+    let amount = await document.querySelector('.amount').value
+
+    //Step 1: Call the NPO token contract & approve the amount contract (to Set Allowance)
     if (amount === '') {
       alert('Please input amount')
     } else {
-      await contract.methods.stake(parseInt(amount)).send({ from: account }, (error, hash) => {
+      amount = (amount * 1e18).toString()
+      await tokenNPO.methods.approve(account, amount).send({ from: account }, (error, hash) => {
         if (error) {
           console.log(error)
         } else {
-          console.log(hash)
+          console.log(`allowance set at this ${hash}`)
+          stakingContract.methods.stake(amount).send({ from: account }, (error, hash) => {
+            if (error) {
+              console.log(error)
+    
+              //Show failed message
+              document.querySelector('.success').style.display = 'none';
+              document.querySelector('.failed').style.display = 'block';
+    
+            } else {
+              setTxHash(hash)
+    
+              //Show success message
+              document.querySelector('.failed').style.display = 'none';
+              document.querySelector('.success').style.display = 'block';
+            }
+          })
         }
       })
+      // Step 2: Call the staking contract
+
+
     }
   }
 
@@ -123,7 +152,7 @@ function App() {
         <a href='#' className='links'>Staking Options</a>
         <a href='#' className='btn connectWalletBtn links' onClick={connectMM}>Connect Wallet</a>
         <div className='disconnect' onClick={disconnect}>
-          <a href='#' className='btn links'>Disconnect ${account}</a>
+          <a href='#' className='btn links'>Disconnect {account}</a>
         </div>
       </header>
       <div className='container'>
@@ -140,17 +169,21 @@ function App() {
           </div>
           <div className='poolInfor'>
             <ul>
-              <li>Your staked balance <span className='boldText'>{yourStakedBalance} </span></li>
+              <li>Your staked balance <span className='boldText'>{yourStakedBalance} NPO </span></li>
               <li>Staking cap <span className='boldText'>{stakingCap} NPO</span> </li>
-              <li>Staked so far <span className='boldText'>{stakedBalance}</span></li>
+              <li>Staked so far <span className='boldText'>{stakedBalance} NPO</span></li>
               <li>Maturity reward <span className='boldText'>30% APR</span></li>
               <li>Early rewards <span className='boldText'>8% APR</span> </li>
+              <li>Staking starts <span className='boldText'>{stakingStart}</span></li>
               <li>Contribution close <span className='boldText'>{stakingEnds}</span></li>
               <li>Early withdraw open <span className='boldText'>{earlyWithdraw}</span></li>
               <li>Maturity at <span className='boldText'>{maturityAt}</span></li>
             </ul>
           </div>
+
         </div>
+        <p className='success'>Stake successfully, txHash {txHash}</p>
+        <p className='failed'>Stake failed, txHash {txHash}</p>
       </div >
     </div >
   );

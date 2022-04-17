@@ -1,3 +1,12 @@
+.container{
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
 /* header */
 .header {
   display: flex;
@@ -38,18 +47,11 @@
 
 
 /* Content */
-.container {
-  margin-top: 50px;
-  width: 100%;
-  display: flex;
-
-}
-
 .content {
   display: flex;
   justify-content: space-evenly;
-  width: 820px;
   margin: auto;
+  width: 920px;
 }
 
 .stakeBox {
@@ -86,4 +88,16 @@
 .boldText{
   font-weight: bold;
   font-size: 18px;
+}
+
+.success{
+  background-color: green;
+  color: #fff;
+  display: none;
+}
+
+.failed{
+  background-color: red;
+  color: #fff;
+  display: none;
 }
