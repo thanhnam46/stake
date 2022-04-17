@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import Web3 from "web3/dist/web3.min"
 import FestakedWithReward from './artifacts/contracts/FestakedWithReward.sol/FestakedWithReward.json'
 
-const stakingContractAddr = '0xbE7E299bB3c2c3B0e436A54935365B9aFF26EB04'
+const stakingContractAddr = '0x1FE470E4E533EeA525b2f2c34a9EbB995597C143'
 
 function App() {
   const [account, setAccount] = useState('0x0000000000000000000000000000000000000000')
