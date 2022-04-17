@@ -55,9 +55,17 @@ function App() {
   web3.eth.setProvider(Web3.givenProvider); //chuyen sang MM provider, neu khong se gap loi Returned error: unknown account
   const contract = new web3.eth.Contract(FestakedWithReward.abi, stakingContractAddr)
 
+
+
   // Your staked balance
   contract.methods.stakeOf(account).call((error, result) => {
     setYourStakedBalance(result)
+  })
+
+  // Pool Name
+  const [poolName, setPoolName] = useState('')
+  contract.methods.name().call((error, result) => {
+    setPoolName(result)
   })
 
   // Get staking cap
@@ -97,10 +105,10 @@ function App() {
     if (amount === '') {
       alert('Please input amount')
     } else {
-      await contract.methods.stake(parseInt(amount)).send({ from: account}, (error, hash) => {
+      await contract.methods.stake(parseInt(amount)).send({ from: account }, (error, hash) => {
         if (error) {
           console.log(error)
-        }else{
+        } else {
           console.log(hash)
         }
       })
@@ -121,7 +129,7 @@ function App() {
       <div className='container'>
         <div className='content'>
           <div className='stakeBox'>
-            <p><span className='boldText'>SPO-BSC Short Term X</span></p>
+            <p><span className='boldText'>{poolName}</span></p>
             <p>{chain}</p>
             <p><span className='boldText'>YOUR ADDRESS</span></p>
             <p>{account}</p>
