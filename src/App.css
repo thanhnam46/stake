@@ -21,11 +21,11 @@
   color: #888;
 }
 
-.connectWalletBtn,
-.disconnectBtn {
+.btn {
   border: solid 1px #888;
-  padding: 10px 20px;
+  padding: 5px 10px;
   font-weight: 600;
+  text-decoration: none;
 }
 
 .disconnect {
@@ -39,6 +39,7 @@
 
 /* Content */
 .container {
+  margin-top: 50px;
   width: 100%;
   display: flex;
 
@@ -61,13 +62,28 @@
   width: 80%;
 }
 
+.amount{
+  width: 85%;
+  padding-right: 20px;
+  margin-bottom: 20px;
+  height: 20px;
+}
+
 .poolInfor {
   width: 50%;
   margin: auto;
   list-style: none;
+  background-color: #ccc;
+  border-radius: 15px
 }
 
 .poolInfor>ul {
   list-style: none;
   line-height: 2;
+  padding: 0 20px
+}
+
+.boldText{
+  font-weight: bold;
+  font-size: 18px;
 }

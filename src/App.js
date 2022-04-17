@@ -1,12 +1,12 @@
 import './App.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Web3 from "web3/dist/web3.min"
 import FestakedWithReward from './artifacts/contracts/FestakedWithReward.sol/FestakedWithReward.json'
 
 const stakingContractAddr = '0xbE7E299bB3c2c3B0e436A54935365B9aFF26EB04'
 
 function App() {
-  const [account, setAccount] = useState('')
+  const [account, setAccount] = useState('0x0000000000000000000000000000000000000000')
   const [yourStakedBalance, setYourStakedBalance] = useState('')
 
 
@@ -14,11 +14,6 @@ function App() {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     setAccount(() => {
       return accounts[0]
-    })
-
-    // Your staked balance
-    contract.methods.stakeOf(account).call((error, result) => {
-      setYourStakedBalance(result)
     })
 
     //Change the UI
@@ -57,8 +52,12 @@ function App() {
 
   //Work with contract
   const web3 = new Web3('https://data-seed-prebsc-1-s1.binance.org:8545/')
-  web3.setProvider(new web3.providers.HttpProvider('https://data-seed-prebsc-1-s1.binance.org:8545/'))
   const contract = new web3.eth.Contract(FestakedWithReward.abi, stakingContractAddr)
+
+  // Your staked balance
+  contract.methods.stakeOf(account).call((error, result) => {
+    setYourStakedBalance(result)
+  })
 
   // Get staking cap
   const [stakingCap, setStakingCap] = useState('')
@@ -89,40 +88,62 @@ function App() {
   contract.methods.withdrawEnds().call((error, result) => {
     setMaturityAt(new Date(result * 1000).toLocaleString())
   })
+
+  // Stake
+  async function stake() {
+    connectMM()
+    const amount = await document.querySelector('.amount').value
+    if (amount === '') {
+      alert('Please input amount')
+    } else {
+      await contract.methods.stake(parseInt(amount)).send({ from: account}, (error, hash) => {
+        if (error) {
+          console.log(error)
+          console.log(amount)
+          console.log(account)
+        }
+      })
+    }
+  }
+
   return (
     <div className="App">
       <header className='header'>
         <img className='logo' src='https://imgur.com/Qxw1soD.jpeg' alt='logo'></img>
         <a href='#' className='links'>Transaction</a>
         <a href='#' className='links'>Staking Options</a>
-        <a href='#' className='connectWalletBtn links' onClick={connectMM}>Connect Wallet</a>
+        <a href='#' className='btn connectWalletBtn links' onClick={connectMM}>Connect Wallet</a>
         <div className='disconnect' onClick={disconnect}>
-          <a href='#' className='disconnectBtn links'>Disconnect ${account}</a>
+          <a href='#' className='btn links'>Disconnect ${account}</a>
         </div>
       </header>
       <div className='container'>
         <div className='content'>
           <div className='stakeBox'>
-            <p>SPO-BSC Short Term</p>
+            <p><span className='boldText'>SPO-BSC Short Term X</span></p>
             <p>{chain}</p>
             <p>YOUR ADDRESS</p>
             <p>{account}</p>
+            <p>CONTRACT ADDRESS</p>
+            <p>{stakingContractAddr}</p>
+            <input className='amount' />
+            <a href='#' className='btn' onClick={stake}>Stake</a>
           </div>
           <div className='poolInfor'>
             <ul>
-              <li>Your staked balance {yourStakedBalance} </li>
-              <li>Staking cap {stakingCap}</li>
-              <li>Staked so far {stakedBalance}</li>
-              <li>Maturity reward 30% APR</li>
-              <li>Early rewards 8% APR</li>
-              <li>Staking contribution close {stakingEnds}</li>
-              <li>Early withdraw open {earlyWithdraw}</li>
-              <li>Maturity at {maturityAt}</li>
+              <li>Your staked balance <span className='boldText'>{yourStakedBalance} </span></li>
+              <li>Staking cap <span className='boldText'>{stakingCap} NPO</span> </li>
+              <li>Staked so far <span className='boldText'>{stakedBalance}</span></li>
+              <li>Maturity reward <span className='boldText'>30% APR</span></li>
+              <li>Early rewards <span className='boldText'>8% APR</span> </li>
+              <li>Contribution close <span className='boldText'>{stakingEnds}</span></li>
+              <li>Early withdraw open <span className='boldText'>{earlyWithdraw}</span></li>
+              <li>Maturity at <span className='boldText'>{maturityAt}</span></li>
             </ul>
           </div>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }
 
