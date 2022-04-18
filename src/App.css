@@ -45,6 +45,11 @@
   display: none;
 }
 
+.disconnect>a:hover{
+  background-color: #000;
+  color: #fff;
+}
+
 
 /* Content */
 .content {
@@ -96,8 +101,23 @@
   display: none;
 }
 
+.success>a{
+  color: #fff;
+  padding: 5px 10px;
+}
+
 .failed{
   background-color: red;
   color: #fff;
   display: none;
+}
+
+.failed>a{
+  color: #fff;
+  padding: 5px 10px;
+}
+
+.stakeBtn:hover{
+  background-color: #000;
+  color: #fff;
 }

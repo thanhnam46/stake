@@ -56,9 +56,12 @@ function App() {
 
   // Your staked balance
   const [yourStakedBalance, setYourStakedBalance] = useState('')
-  stakingContract.methods.stakeOf(account).call((error, result) => {
-    setYourStakedBalance(result / 1e18)
-  })
+  async function getYourStakedBalance() {
+    await stakingContract.methods.stakeOf(account).call((error, result) => {
+      setYourStakedBalance(result / 1e18)
+    })
+  }
+  getYourStakedBalance()
 
   // Pool Name
   const [poolName, setPoolName] = useState('')
@@ -115,22 +118,23 @@ function App() {
       alert('Please input amount')
     } else {
       amount = (amount * 1e18).toString()
-      await tokenNPO.methods.approve(account, amount).send({ from: account }, (error, hash) => {
+      await tokenNPO.methods.approve(stakingContractAddr, amount).send({ from: account }, (error, hash) => {
         if (error) {
           console.log(error)
         } else {
+          // Step 2: Call the staking contract
           console.log(`allowance set at this ${hash}`)
           stakingContract.methods.stake(amount).send({ from: account }, (error, hash) => {
             if (error) {
               console.log(error)
-    
+
               //Show failed message
               document.querySelector('.success').style.display = 'none';
               document.querySelector('.failed').style.display = 'block';
-    
+
             } else {
               setTxHash(hash)
-    
+              getYourStakedBalance()
               //Show success message
               document.querySelector('.failed').style.display = 'none';
               document.querySelector('.success').style.display = 'block';
@@ -138,9 +142,6 @@ function App() {
           })
         }
       })
-      // Step 2: Call the staking contract
-
-
     }
   }
 
@@ -164,8 +165,8 @@ function App() {
             <p>{account}</p>
             <p><span className='boldText'>CONTRACT ADDRESS</span></p>
             <p>{stakingContractAddr}</p>
-            <input className='amount' />
-            <a href='#' className='btn' onClick={stake}>Stake</a>
+            <input className='amount' placeholder='Please input the stake amount...' />
+            <a href='#' className='btn stakeBtn' onClick={stake}>Stake</a>
           </div>
           <div className='poolInfor'>
             <ul>
@@ -182,8 +183,8 @@ function App() {
           </div>
 
         </div>
-        <p className='success'>Stake successfully, txHash {txHash}</p>
-        <p className='failed'>Stake failed, txHash {txHash}</p>
+        <p className='success'>Stake successfully, txHash <a href={'https://testnet.bscscan.com/tx/' + txHash}  target="_blank">{txHash}</a></p>
+        <p className='failed'>Stake failed, txHash <a href={'https://testnet.bscscan.com/tx/' + txHash}  target="_blank">{txHash}</a></p>
       </div >
     </div >
   );
