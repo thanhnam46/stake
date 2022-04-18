@@ -118,30 +118,39 @@ function App() {
       alert('Please input amount')
     } else {
       amount = (amount * 1e18).toString()
-      await tokenNPO.methods.approve(stakingContractAddr, amount).send({ from: account }, (error, hash) => {
-        if (error) {
-          console.log(error)
-        } else {
-          // Step 2: Call the staking contract
-          console.log(`allowance set at this ${hash}`)
-          stakingContract.methods.stake(amount).send({ from: account }, (error, hash) => {
-            if (error) {
-              console.log(error)
+      await tokenNPO.methods.approve(stakingContractAddr, amount).send({ from: account },)
+        .on('transactionHash', function (hash) {
+          console.log(`Set allowance onTransactionHash ${hash}`)
+        })
+        .on('receipt', function (receipt) {
+          console.log(receipt);
+          stakingContract.methods.stake(amount).send({ from: account })
+            .on('transactionHash', function (hash) {
+              console.log(`Staking onTransactionHash ${hash}`)
+            })
+            .on('confirmation', function (confirmationNumber, receipt) {
+              console.log(`onConfirmation ${confirmationNumber}`)
+            })
+            .on('receipt', function (receipt) {
+              console.log(receipt);
+              setTxHash(receipt.transactionHash)
+
+              //Show success message
+              document.querySelector('.failed').style.display = 'none';
+              document.querySelector('.success').style.display = 'block';
+            })
+            .on('error', function (error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+              console.log(`onError ${error}`);
 
               //Show failed message
               document.querySelector('.success').style.display = 'none';
               document.querySelector('.failed').style.display = 'block';
-
-            } else {
-              setTxHash(hash)
-              getYourStakedBalance()
-              //Show success message
-              document.querySelector('.failed').style.display = 'none';
-              document.querySelector('.success').style.display = 'block';
-            }
-          })
-        }
-      })
+            });
+        })
+        .on('error', function (error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
+          console.log(`onError ${error}`);
+          console.log(receipt);
+        });
     }
   }
 
@@ -183,8 +192,8 @@ function App() {
           </div>
 
         </div>
-        <p className='success'>Stake successfully, txHash <a href={'https://testnet.bscscan.com/tx/' + txHash}  target="_blank">{txHash}</a></p>
-        <p className='failed'>Stake failed, txHash <a href={'https://testnet.bscscan.com/tx/' + txHash}  target="_blank">{txHash}</a></p>
+        <p className='success'>Stake successfully, txHash <a href={'https://testnet.bscscan.com/tx/' + txHash} target="_blank">{txHash}</a></p>
+        <p className='failed'>Stake failed, txHash <a href={'https://testnet.bscscan.com/tx/' + txHash} target="_blank">{txHash}</a></p>
       </div >
     </div >
   );
