@@ -149,8 +149,8 @@ function App() {
     <div className="App">
       <header className='header'>
         <img className='logo' src='https://imgur.com/Qxw1soD.jpeg' alt='logo'></img>
-        <a href='#' className='links'>Transaction</a>
-        <a href='#' className='links'>Staking Options</a>
+        <a href='https://testnet.bscscan.com/address/0x1FE470E4E533EeA525b2f2c34a9EbB995597C143#tokentxns' className='links'>Transaction</a>
+        <a href='https://staking.spores.app' className='links'>Staking Options</a>
         <a href='#' className='btn connectWalletBtn links' onClick={connectMM}>Connect Wallet</a>
         <div className='disconnect' onClick={disconnect}>
           <a href='#' className='btn links'>Disconnect {account}</a>
