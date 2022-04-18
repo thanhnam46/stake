@@ -1,0 +1,53 @@
+/* Content */
+.content {
+  display: flex;
+  flex-direction: column;  
+}
+
+.walletAddress {
+  width: 80%;
+}
+
+.amount{
+  width: 93%;
+  padding-right: 20px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  height: 27px;
+}
+
+.boldText{
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.success{
+  background-color: green;
+  color: #fff;
+  display: none;
+}
+
+.success>a{
+  color: #fff;
+  padding: 5px 10px;
+}
+
+.failed{
+  background-color: red;
+  color: #fff;
+  display: none;
+}
+
+.failed>a{
+  color: #fff;
+  padding: 5px 10px;
+}
+
+.stakeBtn{
+  color: #000;
+}
+
+.stakeBtn:hover{
+  background-color: #000;
+  color: #fff;
+}

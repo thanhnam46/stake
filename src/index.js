@@ -1,13 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import Header from './components/header/header'
+import Stake from './components/stake/Stake';
+import PoolInfor from './components/poolInfor/poolInfor';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    {
+      // false &&
+      <Header />
+    }
+    <div className='container'>
+      <Stake />
+      <PoolInfor />
+    </div>
   </React.StrictMode>
 );
 
