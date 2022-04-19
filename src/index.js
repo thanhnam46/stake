@@ -4,7 +4,6 @@ import './index.css';
 import Header from './components/header/header'
 import Stake from './components/stake/Stake';
 import PoolInfor from './components/poolInfor/poolInfor';
-import MessageBoard from './components/overlayMessageBoard/messageBoard'
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
