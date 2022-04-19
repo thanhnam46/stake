@@ -6,7 +6,9 @@ import FestakedWithReward from '../../artifacts/contracts/FestakedWithReward.sol
 import tokenContract from '../../artifacts/contracts/tokenContract/tokenContract.json'
 import MessageBoard from '../overlayMessageBoard/messageBoard'
 
-const stakingContractAddr = '0x1FE470E4E533EeA525b2f2c34a9EbB995597C143'
+// const stakingContractAddr = '0x1FE470E4E533EeA525b2f2c34a9EbB995597C143'
+const stakingContractAddr = '0xa49403Be3806eb19F27163D396f8A77b40b75C5f'
+
 
 function Stake() {
   const [account, setAccount] = useState('0x0000000000000000000000000000000000000000')

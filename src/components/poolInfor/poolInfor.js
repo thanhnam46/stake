@@ -2,7 +2,9 @@ import './poolInfor.css'
 import { useState } from 'react'
 import Web3 from "web3/dist/web3.min"
 import FestakedWithReward from '../../artifacts/contracts/FestakedWithReward.sol/FestakedWithReward.json'
-const stakingContractAddr = '0x1FE470E4E533EeA525b2f2c34a9EbB995597C143'
+// const stakingContractAddr = '0x1FE470E4E533EeA525b2f2c34a9EbB995597C143'
+const stakingContractAddr = '0xa49403Be3806eb19F27163D396f8A77b40b75C5f'
+
 
 function PoolInfor() {
     const [account, setAccount] = useState('0x0000000000000000000000000000000000000000')
@@ -26,7 +28,7 @@ function PoolInfor() {
     const [yourStakedBalance, setYourStakedBalance] = useState('')
     async function getYourStakedBalance() {
         await stakingContract.methods.stakeOf(account).call((error, result) => {
-            setYourStakedBalance(result / 1e18)
+            setYourStakedBalance((result / 1e18).toLocaleString('en-EN'))
         })
     }
     getYourStakedBalance()
@@ -40,13 +42,13 @@ function PoolInfor() {
     // Get staking cap
     const [stakingCap, setStakingCap] = useState('')
     stakingContract.methods.stakingCap().call((error, result) => {
-        setStakingCap(result / 1e18)
+        setStakingCap((result / 1e18).toLocaleString('en-EN'))
     })
 
     // Staked so far
     const [stakedBalance, setStakedBalance] = useState('')
     stakingContract.methods.stakedBalance().call((error, result) => {
-        setStakedBalance(result / 1e18)
+        setStakedBalance((result / 1e18).toLocaleString('en-EN'))
     })
 
     // Staking start

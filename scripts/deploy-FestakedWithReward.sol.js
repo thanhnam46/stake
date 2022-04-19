@@ -28,7 +28,7 @@ async function main() {
     "1650449658", //stakingEnds_
     "1650449659", //withdrawStarts_
     "1650881658", //withdrawEnds_
-    "500000000000000000000", //stakingCap_
+    "50000000000000000000000000", //stakingCap_
     //{gasLimit: 10000000}    //rinkeby
     {gasLimit: 10000000}    //bscTestnet
     );
