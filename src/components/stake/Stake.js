@@ -1,8 +1,10 @@
 import './Stake.css'
 import { useState } from 'react'
 import Web3 from "web3/dist/web3.min"
+import BigNumber from "bignumber.js";
 import FestakedWithReward from '../../artifacts/contracts/FestakedWithReward.sol/FestakedWithReward.json'
 import tokenContract from '../../artifacts/contracts/tokenContract/tokenContract.json'
+import MessageBoard from '../overlayMessageBoard/messageBoard'
 
 const stakingContractAddr = '0x1FE470E4E533EeA525b2f2c34a9EbB995597C143'
 
@@ -11,7 +13,11 @@ function Stake() {
 
   connectMM()
   async function connectMM() {
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }, (error) => {
+      if (error) {
+        console.log(error)
+      }
+    });
     setAccount(accounts[0])
   }
 
@@ -24,7 +30,7 @@ function Stake() {
   if (window.ethereum.networkVersion === '97') {
     chain = 'You are connected to BSC tesnet'
   } else {
-    chain = 'Please connect to BSC tesnet!!!'
+    chain = 'Please connect your Wallet to BSC tesnet!!!'
   }
 
   window.ethereum.on('chainChanged', (chainID) => {
@@ -51,28 +57,65 @@ function Stake() {
     setPoolName(result)
   })
 
+  // Get staking cap
+  const [stakingCap, setStakingCap] = useState('')
+  stakingContract.methods.stakingCap().call((error, result) => {
+    setStakingCap(result / 1e18)
+  })
+
+  // Staked so far
+  const [stakedBalance, setStakedBalance] = useState('')
+  stakingContract.methods.stakedBalance().call((error, result) => {
+    setStakedBalance(result / 1e18)
+  })
+
   // Stake
+  // Control token contract 
   const [txHash, setTxHash] = useState('')
   const tokenAddr = '0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83'
   const tokenNPO = new web3.eth.Contract(tokenContract.abi, tokenAddr)
 
+  // show/hide message
+  const [messageVisibility, setMessageVisibility] = useState(false)
+  const [message, setMessage] = useState('')
+
   async function stakeToken() {
     let amount = await document.querySelector('.amount').value
+    document.querySelector('.failed').style.display = 'none';
+    document.querySelector('.success').style.display = 'none';
+
+    // Balance
+    const balance = await tokenNPO.methods.balanceOf(account).call()
 
     //Step 1: Call the NPO token contract & approve the amount contract (to Set Allowance)
     if (amount === '') {
-      alert('Please input amount')
+      alert('Please input amount') //user has to input amount before click on stake button
+      setMessageVisibility(false)
+    } else if (amount > balance / 1e18) {
+      alert('Not enough NPO balance') // check wallet balance
+    } else if (stakingCap == stakedBalance) {
+      alert('Pool was fulfilled, please stake into another pool!') // check if pool was fulfilled
     } else {
-      amount = (amount * 1e18).toString()
+      setMessageVisibility(true)
+      setMessage('Waiting for ALLOWANCE confirmation, please confirm it on your Metamask extension!')
+
+      //handle amount (number bigint)
+      amount = BigNumber(amount * 1e18).toFixed(0)
+      console.log(amount)
+
       await tokenNPO.methods.approve(stakingContractAddr, amount).send({ from: account },)
         .on('transactionHash', function (hash) {
           console.log(`Set allowance onTransactionHash ${hash}`)
+          setMessage('Setting ALLOWANCE, please wait...!')
         })
         .on('receipt', function (receipt) {
           console.log(receipt);
+          setMessage('Waiting for STAKING confirmation, please confirm it on your Metamask extension')
+
           stakingContract.methods.stake(amount).send({ from: account })
             .on('transactionHash', function (hash) {
               console.log(`Staking onTransactionHash ${hash}`)
+              setMessage('Confirming, please wait...!')
             })
             .on('confirmation', function (confirmationNumber, receipt) {
               console.log(`onConfirmation ${confirmationNumber}`)
@@ -82,6 +125,7 @@ function Stake() {
               setTxHash(receipt.transactionHash)
 
               //Show success message
+              setMessageVisibility(false)
               document.querySelector('.failed').style.display = 'none';
               document.querySelector('.success').style.display = 'block';
             })
@@ -91,17 +135,23 @@ function Stake() {
               //Show failed message
               document.querySelector('.success').style.display = 'none';
               document.querySelector('.failed').style.display = 'block';
+              setMessageVisibility(false)
+              setTxHash(receipt.transactionHash)
+
             });
         })
         .on('error', function (error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
           console.log(`onError ${error}`);
           console.log(receipt);
+          setMessageVisibility(false)
+          setTxHash(receipt.transactionHash)
+
         });
     }
   }
-
   return (
     <div className='content'>
+      {messageVisibility && <MessageBoard message={message} />}
       <div className='stakeBox'>
         <p><span className='boldText'>{poolName}</span></p>
         <p>{chain}</p>
@@ -109,7 +159,7 @@ function Stake() {
         <p>{account}</p>
         <p><span className='boldText'>CONTRACT ADDRESS</span></p>
         <p>{stakingContractAddr}</p>
-        <input className='amount' placeholder='Please input the stake amount...' />
+        <input className='amount' placeholder='Please input the stake amount...' type='number' />
         <a href='#' className='btn stakeBtn' onClick={stakeToken}>Stake</a>
       </div>
       <div className='message'>
@@ -119,4 +169,5 @@ function Stake() {
     </div>
   );
 }
+
 export default Stake;

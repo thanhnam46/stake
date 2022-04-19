@@ -12,6 +12,11 @@ function PoolInfor() {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         setAccount(accounts[0])
     }
+
+    window.ethereum.on('accountsChanged', async () => {
+        setAccount(window.ethereum.selectedAddress)
+        getYourStakedBalance()
+    });
     //Work with staking contract
     const web3 = new Web3('https://data-seed-prebsc-1-s1.binance.org:8545/')
     web3.eth.setProvider(Web3.givenProvider); //chuyen sang MM provider, neu khong se gap loi Returned error: unknown account

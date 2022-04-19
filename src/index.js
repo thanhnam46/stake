@@ -10,10 +10,6 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    {
-      false &&
-      <MessageBoard message='This is a test message' />
-    }
     <Header />
     <div className='container'>
       <Stake />

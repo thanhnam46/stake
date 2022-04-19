@@ -25,6 +25,7 @@
   background-color: green;
   color: #fff;
   display: none;
+  text-align: center;
 }
 
 .success>a{
@@ -35,6 +36,7 @@
 .failed{
   background-color: red;
   color: #fff;
+  text-align: center;
   display: none;
 }
 
