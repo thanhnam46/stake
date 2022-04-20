@@ -7,11 +7,19 @@ import PoolInfor from './components/poolInfor/poolInfor';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+let account = window.ethereum.request({ method: 'eth_requestAccounts' }, (error) => {
+  if (error) {
+    console.log(error)
+  }else{
+    console.log(account[0])
+  }
+})[0];
+
 root.render(
   <React.StrictMode>
     <Header />
     <div className='container'>
-      <Stake />
+      <Stake account={account} />
       <PoolInfor />
     </div>
   </React.StrictMode>

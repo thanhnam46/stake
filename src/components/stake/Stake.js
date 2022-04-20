@@ -9,10 +9,10 @@ import MessageBoard from '../overlayMessageBoard/messageBoard'
 // const stakingContractAddr = '0x1FE470E4E533EeA525b2f2c34a9EbB995597C143'
 const stakingContractAddr = '0xa49403Be3806eb19F27163D396f8A77b40b75C5f'
 
+let accountX
 
-function Stake() {
-  const [account, setAccount] = useState('0x0000000000000000000000000000000000000000')
-
+function Stake(props) {
+  const [account, setAccount] = useState(accountX)
   connectMM()
   async function connectMM() {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }, (error) => {
@@ -26,6 +26,8 @@ function Stake() {
   window.ethereum.on('accountsChanged', async () => {
     setAccount(window.ethereum.selectedAddress)
   });
+
+  accountX = account
 
   //check chain
   let chain = ''
@@ -53,6 +55,15 @@ function Stake() {
   web3.eth.setProvider(Web3.givenProvider); //chuyen sang MM provider, neu khong se gap loi Returned error: unknown account
   const stakingContract = new web3.eth.Contract(FestakedWithReward.abi, stakingContractAddr)
 
+  // Your staked balance
+  const [yourStakedBalance, setYourStakedBalance] = useState('')
+  async function getYourStakedBalance() {
+    await stakingContract.methods.stakeOf(account).call((error, result) => {
+      setYourStakedBalance((result / 1e18).toLocaleString('en-EN'))
+    })
+  }  
+  getYourStakedBalance()  //Error: invalid address
+
   // Pool Name
   const [poolName, setPoolName] = useState('')
   stakingContract.methods.name().call((error, result) => {
@@ -69,6 +80,12 @@ function Stake() {
   const [stakedBalance, setStakedBalance] = useState('')
   stakingContract.methods.stakedBalance().call((error, result) => {
     setStakedBalance(result / 1e18)
+  })
+
+  // Early Withdraw open
+  const [earlyWithdraw, setEarlyWithdraw] = useState('')
+  stakingContract.methods.withdrawStarts().call((error, result) => {
+    setEarlyWithdraw(new Date(result * 1000).toLocaleString())
   })
 
   // Stake
@@ -151,6 +168,41 @@ function Stake() {
         });
     }
   }
+
+  async function unStakeToken() {
+    let amount = await document.querySelector('.amount').value
+    document.querySelector('.failed').style.display = 'none';
+    document.querySelector('.success').style.display = 'none';
+
+    if (amount === '') {
+      alert('Please input amount') //user has to input amount before click on stake button
+      setMessageVisibility(false)
+    } else if (amount > yourStakedBalance) {
+      alert('You could not withdraw more than what you staked')
+    } else if (Date.now().toLocaleString() < earlyWithdraw) {
+      alert('Could not withdraw, withdral will be allowed from ' + earlyWithdraw)
+    } else {
+      setMessageVisibility(true)
+      //handle amount (number bigint)
+      amount = BigNumber(amount * 1e18).toFixed(0)
+      setMessage('Processing, please wait...!')
+
+      await stakingContract.methods.withdraw(amount).call()
+        .on('receipt', function (receipt) {
+          setTxHash(receipt.transactionHash)
+
+          //Show success message
+          setMessageVisibility(false)
+          document.querySelector('.failed').style.display = 'none';
+          document.querySelector('.success').style.display = 'block';
+        })
+        .on('error', function (error, receipt) {
+          console.log(error)
+          setMessageVisibility(false)
+          setTxHash(receipt.transactionHash)
+        })
+    }
+  }
   return (
     <div className='content'>
       {messageVisibility && <MessageBoard message={message} />}
@@ -158,11 +210,14 @@ function Stake() {
         <p><span className='boldText'>{poolName}</span></p>
         <p>{chain}</p>
         <p><span className='boldText'>YOUR ADDRESS</span></p>
-        <p>{account}</p>
+        <p>{accountX}</p>
         <p><span className='boldText'>CONTRACT ADDRESS</span></p>
         <p>{stakingContractAddr}</p>
         <input className='amount' placeholder='Please input the stake amount...' type='number' />
-        <a href='#' className='btn stakeBtn' onClick={stakeToken}>Stake</a>
+        <div className='btns'>
+          <a href='#' className='btn' onClick={stakeToken}>Stake</a>
+          <a href='#' className='btn' onClick={unStakeToken}>UnStake</a>
+        </div>
       </div>
       <div className='message'>
         <p className='failed'>Stake failed: <a href={'https://testnet.bscscan.com/tx/' + txHash} target="_blank">Click here for detail</a></p>
@@ -171,5 +226,5 @@ function Stake() {
     </div>
   );
 }
-
+export { accountX }
 export default Stake;

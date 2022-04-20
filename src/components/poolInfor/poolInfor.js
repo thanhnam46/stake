@@ -2,6 +2,7 @@ import './poolInfor.css'
 import { useState } from 'react'
 import Web3 from "web3/dist/web3.min"
 import FestakedWithReward from '../../artifacts/contracts/FestakedWithReward.sol/FestakedWithReward.json'
+
 // const stakingContractAddr = '0x1FE470E4E533EeA525b2f2c34a9EbB995597C143'
 const stakingContractAddr = '0xa49403Be3806eb19F27163D396f8A77b40b75C5f'
 
@@ -19,6 +20,7 @@ function PoolInfor() {
         setAccount(window.ethereum.selectedAddress)
         getYourStakedBalance()
     });
+
     //Work with staking contract
     const web3 = new Web3('https://data-seed-prebsc-1-s1.binance.org:8545/')
     web3.eth.setProvider(Web3.givenProvider); //chuyen sang MM provider, neu khong se gap loi Returned error: unknown account
@@ -90,5 +92,4 @@ function PoolInfor() {
         </div>
     )
 }
-
 export default PoolInfor
