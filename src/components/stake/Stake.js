@@ -9,7 +9,6 @@ import MessageBoard from '../overlayMessageBoard/messageBoard'
 // const stakingContractAddr = '0x1FE470E4E533EeA525b2f2c34a9EbB995597C143'
 const stakingContractAddr = '0xa49403Be3806eb19F27163D396f8A77b40b75C5f'
 
-let accountX
 
 function Stake(props) {
   const [account, setAccount] = useState('0x0000000000000000000000000000000000000000')
@@ -27,7 +26,6 @@ function Stake(props) {
     setAccount(window.ethereum.selectedAddress)
   });
 
-  accountX = account
 
   //check chain
   let chain = ''
@@ -224,7 +222,7 @@ function Stake(props) {
         <p>{accountX}</p>
         <p><span className='boldText'>CONTRACT ADDRESS</span></p>
         <p>{stakingContractAddr}</p>
-        <input className='amount' placeholder='Please input the stake amount...' type='number' min={0} />
+        <input className='amount' placeholder='Please input the amount...' type='number' min={0} />
         <div className='btns'>
           <a href='#' className='btn' onClick={stakeToken}>Stake</a>
           <a href='#' className='btn' onClick={unStakeToken}>UnStake</a>
