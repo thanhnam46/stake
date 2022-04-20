@@ -219,7 +219,7 @@ function Stake(props) {
         <p><span className='boldText'>{poolName}</span></p>
         <p>{chain}</p>
         <p><span className='boldText'>YOUR ADDRESS</span></p>
-        <p>{accountX}</p>
+        <p>{account}</p>
         <p><span className='boldText'>CONTRACT ADDRESS</span></p>
         <p>{stakingContractAddr}</p>
         <input className='amount' placeholder='Please input the amount...' type='number' min={0} />
@@ -235,5 +235,4 @@ function Stake(props) {
     </div>
   );
 }
-export { accountX }
 export default Stake;
