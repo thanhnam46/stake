@@ -12,7 +12,7 @@ const stakingContractAddr = '0xa49403Be3806eb19F27163D396f8A77b40b75C5f'
 let accountX
 
 function Stake(props) {
-  const [account, setAccount] = useState(accountX)
+  const [account, setAccount] = useState('0x0000000000000000000000000000000000000000')
   connectMM()
   async function connectMM() {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }, (error) => {
@@ -61,8 +61,8 @@ function Stake(props) {
     await stakingContract.methods.stakeOf(account).call((error, result) => {
       setYourStakedBalance((result / 1e18).toLocaleString('en-EN'))
     })
-  }  
-  getYourStakedBalance()  //Error: invalid address
+  }
+  getYourStakedBalance()
 
   // Pool Name
   const [poolName, setPoolName] = useState('')
@@ -85,7 +85,8 @@ function Stake(props) {
   // Early Withdraw open
   const [earlyWithdraw, setEarlyWithdraw] = useState('')
   stakingContract.methods.withdrawStarts().call((error, result) => {
-    setEarlyWithdraw(new Date(result * 1000).toLocaleString())
+    // setEarlyWithdraw(new Date(result * 1000).toLocaleString())
+    setEarlyWithdraw(result)
   })
 
   // Stake
@@ -107,8 +108,8 @@ function Stake(props) {
     const balance = await tokenNPO.methods.balanceOf(account).call()
 
     //Step 1: Call the NPO token contract & approve the amount contract (to Set Allowance)
-    if (amount === '') {
-      alert('Please input amount') //user has to input amount before click on stake button
+    if (amount === '' || amount < 0) {
+      alert('Please input a positive amount') //user has to input amount before click on stake button
       setMessageVisibility(false)
     } else if (amount > balance / 1e18) {
       alert('Not enough NPO balance') // check wallet balance
@@ -174,20 +175,25 @@ function Stake(props) {
     document.querySelector('.failed').style.display = 'none';
     document.querySelector('.success').style.display = 'none';
 
-    if (amount === '') {
-      alert('Please input amount') //user has to input amount before click on stake button
+    if (amount === '' || amount < 0) {
+      alert('Please input a positive amount number') //user has to input amount before click on stake button
       setMessageVisibility(false)
     } else if (amount > yourStakedBalance) {
       alert('You could not withdraw more than what you staked')
-    } else if (Date.now().toLocaleString() < earlyWithdraw) {
-      alert('Could not withdraw, withdral will be allowed from ' + earlyWithdraw)
+    } else if (Date.now() < earlyWithdraw * 1000) {
+      alert(`Could not withdraw, you can withdraw from  ${new Date(earlyWithdraw * 1000).toLocaleString()}`)
     } else {
       setMessageVisibility(true)
       //handle amount (number bigint)
       amount = BigNumber(amount * 1e18).toFixed(0)
-      setMessage('Processing, please wait...!')
+      setMessage('Waiting for WITHDRAW confirmation, please confirm it on your Metamask extension')
 
-      await stakingContract.methods.withdraw(amount).call()
+
+      await stakingContract.methods.withdraw(amount).send({ from: account })
+        .on('transactionHash', function (txHash) {
+          setMessage('Processing, please wait...!')
+
+        })
         .on('receipt', function (receipt) {
           setTxHash(receipt.transactionHash)
 
@@ -200,6 +206,11 @@ function Stake(props) {
           console.log(error)
           setMessageVisibility(false)
           setTxHash(receipt.transactionHash)
+          setStakedBalance(() => {
+            stakingContract.methods.stakeOf(account).call((error, result) => {
+              setYourStakedBalance((result / 1e18).toLocaleString('en-EN'))
+            })
+          })
         })
     }
   }
@@ -213,7 +224,7 @@ function Stake(props) {
         <p>{accountX}</p>
         <p><span className='boldText'>CONTRACT ADDRESS</span></p>
         <p>{stakingContractAddr}</p>
-        <input className='amount' placeholder='Please input the stake amount...' type='number' />
+        <input className='amount' placeholder='Please input the stake amount...' type='number' min={0} />
         <div className='btns'>
           <a href='#' className='btn' onClick={stakeToken}>Stake</a>
           <a href='#' className='btn' onClick={unStakeToken}>UnStake</a>
