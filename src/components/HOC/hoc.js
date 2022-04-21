@@ -52,9 +52,12 @@ const withWallet = (OriginalComponent) => {
         const stakingContract = new web3.eth.Contract(FestakedWithReward.abi, stakingContractAddr)
         // Your staked balance
         const [yourStakedBalance, setYourStakedBalance] = useState('')
-        stakingContract.methods.stakeOf(account).call((error, result) => {
-            setYourStakedBalance((result / 1e18).toLocaleString('en-EN'))
-        })
+        getyourStakedBalance()
+        function getyourStakedBalance() {
+            stakingContract.methods.stakeOf(account).call((error, result) => {
+                setYourStakedBalance((result / 1e18).toLocaleString('en-EN'))
+            })
+        }
 
         // Pool Name
         const [poolName, setPoolName] = useState('')
@@ -65,7 +68,7 @@ const withWallet = (OriginalComponent) => {
         // Get staking cap
         const [stakingCap, setStakingCap] = useState('')
         stakingContract.methods.stakingCap().call((error, result) => {
-            setStakingCap(result / 1e18)
+            setStakingCap((result / 1e18).toLocaleString('en-EN'))
         })
 
         // Staked so far
@@ -122,6 +125,7 @@ const withWallet = (OriginalComponent) => {
                 maturityAt={maturityAt}
                 stakingContract={stakingContract}
                 tokenNPO={tokenNPO}
+                getyourStakedBalance={getyourStakedBalance}
             />
         )
     }

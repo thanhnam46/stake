@@ -24,6 +24,7 @@ function Stake(props) {
 
   let setStakedBalance = props.setStakedBalance
   let setYourStakedBalance = props.setYourStakedBalance
+  let getyourStakedBalance=props.getyourStakedBalance
   // Stake & Unstake
   const [txHash, setTxHash] = useState('')
 
@@ -75,7 +76,7 @@ function Stake(props) {
             .on('receipt', function (receipt) {
               console.log(receipt);
               setTxHash(receipt.transactionHash)
-
+              getyourStakedBalance()
               //Show success message
               setMessageVisibility(false)
               document.querySelector('.failed').style.display = 'none';
@@ -110,7 +111,8 @@ function Stake(props) {
     if (amount === '' || amount < 0) {
       alert('Please input a positive amount number') //user has to input amount before click on stake button
       setMessageVisibility(false)
-    } else if (amount > yourStakedBalance) {
+    } else if (parseFloat(amount) > parseFloat(yourStakedBalance)) {
+      console.log(amount)
       console.log(yourStakedBalance)
       console.log(stakedBalance)
       alert('You could not withdraw more than what you staked')
@@ -133,6 +135,7 @@ function Stake(props) {
         })
         .on('receipt', async function (receipt) {
           setTxHash(receipt.transactionHash)
+          getyourStakedBalance()
 
           //Show success message
           setMessageVisibility(false)

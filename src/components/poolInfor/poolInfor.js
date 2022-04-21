@@ -23,7 +23,7 @@ function PoolInfor(props) {
                 <li>Early rewards <span className='boldText'>8% APR</span> </li>
                 <li>Staking starts <span className='boldText'>{stakingStart}</span></li>
                 <li>Contribution close <span className='boldText'>{stakingEnds}</span></li>
-                <li>Early withdraw open <span className='boldText'>{earlyWithdraw}</span></li>
+                <li>Early withdraw open <span className='boldText'>{new Date(earlyWithdraw * 1000).toLocaleString()}</span></li>
                 <li>Maturity at <span className='boldText'>{maturityAt}</span></li>
             </ul>
         </div>
