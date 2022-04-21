@@ -1,97 +1,31 @@
 import './Stake.css'
 import { useState } from 'react'
-import Web3 from "web3/dist/web3.min"
 import BigNumber from "bignumber.js";
-import FestakedWithReward from '../../artifacts/contracts/FestakedWithReward.sol/FestakedWithReward.json'
-import tokenContract from '../../artifacts/contracts/tokenContract/tokenContract.json'
 import MessageBoard from '../overlayMessageBoard/messageBoard'
+import withWallet from '../HOC/hoc'
 
 // const stakingContractAddr = '0x1FE470E4E533EeA525b2f2c34a9EbB995597C143'
 const stakingContractAddr = '0xa49403Be3806eb19F27163D396f8A77b40b75C5f'
 
 
 function Stake(props) {
-  const [account, setAccount] = useState('0x0000000000000000000000000000000000000000')
-  connectMM()
-  async function connectMM() {
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }, (error) => {
-      if (error) {
-        console.log(error)
-      }
-    });
-    setAccount(accounts[0])
-  }
+  // Call from HOC - Reuse functions/code fro Higher Order Component
+  props.connectMM()
+  props.onAccountChange()
+  let account = props.account
+  let chain = props.chain
+  let stakingContract = props.stakingContract
+  let tokenNPO = props.tokenNPO
+  let poolName = props.poolName
+  let stakingCap = props.stakingCap
+  let stakedBalance = props.stakedBalance
+  let earlyWithdraw = props.earlyWithdraw
+  let yourStakedBalance = props.yourStakedBalance
 
-  window.ethereum.on('accountsChanged', async () => {
-    setAccount(window.ethereum.selectedAddress)
-  });
-
-
-  //check chain
-  let chain = ''
-  if (window.ethereum.networkVersion === '97') {
-    chain = 'You are connected to BSC tesnet'
-  } else {
-    chain = 'Please connect your Wallet to BSC tesnet!!!'
-  }
-
-  window.ethereum.on('chainChanged', (chainID) => {
-    // Handle the new chain.
-    // Correctly handling chain changes can be complicated.
-    // We recommend reloading the page unless you have good reason not to.
-    if (parseInt(chainID).toString === '97') {
-      chain = 'You are connected to BSC tesnet'
-    } else {
-      chain = 'Please connect to BSC tesnet!!!'
-    }
-    window.location.reload();
-  })
-
-
-  //Work with staking contract
-  const web3 = new Web3('https://data-seed-prebsc-1-s1.binance.org:8545/')
-  web3.eth.setProvider(Web3.givenProvider); //chuyen sang MM provider, neu khong se gap loi Returned error: unknown account
-  const stakingContract = new web3.eth.Contract(FestakedWithReward.abi, stakingContractAddr)
-
-  // Your staked balance
-  const [yourStakedBalance, setYourStakedBalance] = useState('')
-  async function getYourStakedBalance() {
-    await stakingContract.methods.stakeOf(account).call((error, result) => {
-      setYourStakedBalance((result / 1e18).toLocaleString('en-EN'))
-    })
-  }
-  getYourStakedBalance()
-
-  // Pool Name
-  const [poolName, setPoolName] = useState('')
-  stakingContract.methods.name().call((error, result) => {
-    setPoolName(result)
-  })
-
-  // Get staking cap
-  const [stakingCap, setStakingCap] = useState('')
-  stakingContract.methods.stakingCap().call((error, result) => {
-    setStakingCap(result / 1e18)
-  })
-
-  // Staked so far
-  const [stakedBalance, setStakedBalance] = useState('')
-  stakingContract.methods.stakedBalance().call((error, result) => {
-    setStakedBalance(result / 1e18)
-  })
-
-  // Early Withdraw open
-  const [earlyWithdraw, setEarlyWithdraw] = useState('')
-  stakingContract.methods.withdrawStarts().call((error, result) => {
-    // setEarlyWithdraw(new Date(result * 1000).toLocaleString())
-    setEarlyWithdraw(result)
-  })
-
-  // Stake
-  // Control token contract 
+  let setStakedBalance = props.setStakedBalance
+  let setYourStakedBalance = props.setYourStakedBalance
+  // Stake & Unstake
   const [txHash, setTxHash] = useState('')
-  const tokenAddr = '0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83'
-  const tokenNPO = new web3.eth.Contract(tokenContract.abi, tokenAddr)
 
   // show/hide message
   const [messageVisibility, setMessageVisibility] = useState(false)
@@ -177,6 +111,8 @@ function Stake(props) {
       alert('Please input a positive amount number') //user has to input amount before click on stake button
       setMessageVisibility(false)
     } else if (amount > yourStakedBalance) {
+      console.log(yourStakedBalance)
+      console.log(stakedBalance)
       alert('You could not withdraw more than what you staked')
     } else if (Date.now() < earlyWithdraw * 1000) {
       alert(`Could not withdraw, you can withdraw from  ${new Date(earlyWithdraw * 1000).toLocaleString()}`)
@@ -192,7 +128,10 @@ function Stake(props) {
           setMessage('Processing, please wait...!')
 
         })
-        .on('receipt', function (receipt) {
+        .on('confirmation', function (confirmationNumber, receipt) {
+          console.log(`onConfirmation ${confirmationNumber}`)
+        })
+        .on('receipt', async function (receipt) {
           setTxHash(receipt.transactionHash)
 
           //Show success message
@@ -235,4 +174,4 @@ function Stake(props) {
     </div>
   );
 }
-export default Stake;
+export default withWallet(Stake)
