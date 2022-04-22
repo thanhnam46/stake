@@ -11,10 +11,10 @@ const stakingContractAddr = '0xa49403Be3806eb19F27163D396f8A77b40b75C5f'
 function Stake(props) {
   // Call from HOC - Reuse functions/code fro Higher Order Component
   props.onAccountChange()
-
   let setStakedBalance = props.setStakedBalance
   let setYourStakedBalance = props.setYourStakedBalance
   let getyourStakedBalance = props.getyourStakedBalance
+  
   // Stake & Unstake
   const [txHash, setTxHash] = useState('')
 
