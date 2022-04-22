@@ -96,7 +96,7 @@ const withWallet = (OriginalComponent) => {
         // Contribution close
         const [stakingEnds, setstakingEnds] = useState('')
         stakingContract.methods.stakingEnds().call((error, result) => {
-            setstakingEnds(new Date(result * 1000).toLocaleString())
+            setstakingEnds(result)
         })
 
 

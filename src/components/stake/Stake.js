@@ -40,18 +40,18 @@ function Stake(props) {
       //handle amount (number bigint)
       amount = BigNumber(amount * 1e18).toFixed(0)
 
-      await props.tokenNPO.methods.approve(props.stakingContractAddr, props.account).send({ from: props.account },)
+      await props.tokenNPO.methods.approve(props.stakingContractAddr, amount).send({ from: props.account },)
         .on('transactionHash', function (hash) {
           setMessage('Setting ALLOWANCE, please wait...!')
         })
         .on('receipt', function (receipt) {
           setMessage('Waiting for STAKING confirmation, please confirm it on your Metamask extension')
-          props.stakingContract.methods.stake(props.account).send({ from: props.account })
+          props.stakingContract.methods.stake(amount).send({ from: props.account })
             .on('transactionHash', function (hash) {
               setMessage('Confirming, please wait...!')
             })
             .on('receipt', function (receipt) {
-              setMessage('Unstake successfully')
+              setMessage('Stake successfully')
               setTxHash(`txHash: ${receipt.transactionHash}`)
               setClsBtnVis(true)
             })
