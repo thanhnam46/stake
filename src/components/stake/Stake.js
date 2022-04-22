@@ -19,7 +19,7 @@ function Stake(props) {
 
   async function stakeToken() {
     let amount = await document.querySelector('.amount').value
-
+ 
     // Balance
     const balance = await props.tokenNPO.methods.balanceOf(props.account).call()
 
@@ -27,6 +27,8 @@ function Stake(props) {
     if (amount === '' || amount < 0) {
       alert('Please input a positive amount') //user has to input amount before click on stake button
       setMessageVisibility(false)
+    } else if (Date.now() < props.stakingStart * 1000) {
+      alert(`Could not stake, staking starts at ${new Date(props.stakingStart * 1000).toLocaleString()}`)
     } else if (amount > balance / 1e18) {
       alert('Not enough NPO balance') // check wallet balance
     } else if (props.stakingCap == props.stakedBalance) {
@@ -37,7 +39,6 @@ function Stake(props) {
 
       //handle amount (number bigint)
       amount = BigNumber(amount * 1e18).toFixed(0)
-      console.log(amount)
 
       await props.tokenNPO.methods.approve(props.stakingContractAddr, props.account).send({ from: props.account },)
         .on('transactionHash', function (hash) {
@@ -55,19 +56,13 @@ function Stake(props) {
               setClsBtnVis(true)
             })
             .on('error', function (error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
-              setMessage('Stake Failed')
-              setTxHash(`txHash: ${receipt.transactionHash}`)
-              console.log(receipt)
-              setError(error.toString())
-
               setClsBtnVis(true)
+              setMessage('Stake Failed')
             });
         })
-        .on('error', function (error, receipt) { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
-          setMessage('Set Allowance Failed')
-          setTxHash(`txHash: ${receipt.transactionHash}`)
-          // setError(error.toString())
+        .on('error', function () { // If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
           setClsBtnVis(true)
+          setMessage('Set allowance failed')
         });
     }
   }
@@ -103,7 +98,6 @@ function Stake(props) {
           setMessage('Unstake failed')
           setError(error.toString())
           setClsBtnVis(true)
-
         })
     }
   }
@@ -117,7 +111,7 @@ function Stake(props) {
         <p>{props.account}</p>
         <p><span className='boldText'>CONTRACT ADDRESS</span></p>
         <p>{props.stakingContractAddr}</p>
-        <input className='amount' placeholder='Please input the amount...' type='number' min={0} />
+        <input className='amount' placeholder='Please input the amount...' type='number' min={0} required />
         <div className='btns'>
           <a href='#' className='btn' onClick={stakeToken}>Stake</a>
           <a href='#' className='btn' onClick={unStakeToken}>UnStake</a>

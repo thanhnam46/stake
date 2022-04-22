@@ -1,6 +1,5 @@
 import './poolInfor.css'
 import withWallet from '../HOC/hoc'
-import { useEffect } from 'react'
 
 function PoolInfor(props) {
     props.onAccountChange()
@@ -13,7 +12,7 @@ function PoolInfor(props) {
                 <li>Pool balance <span className='boldText'>{props.stakedBalance} NPO</span></li>
                 <li>Maturity reward <span className='boldText'>30% APR</span></li>
                 <li>Early rewards <span className='boldText'>8% APR</span> </li>
-                <li>Staking starts <span className='boldText'>{props.stakingStart}</span></li>
+                <li>Staking starts <span className='boldText'>{new Date(props.stakingStart * 1000).toLocaleString()}</span></li>
                 <li>Contribution close <span className='boldText'>{props.stakingEnds}</span></li>
                 <li>Early withdraw open <span className='boldText'>{new Date(props.earlyWithdraw * 1000).toLocaleString()}</span></li>
                 <li>Maturity at <span className='boldText'>{props.maturityAt}</span></li>

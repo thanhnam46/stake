@@ -46,7 +46,8 @@ const withWallet = (OriginalComponent) => {
 
         //Work with staking contract
         // const stakingContractAddr = '0x1FE470E4E533EeA525b2f2c34a9EbB995597C143'
-        const stakingContractAddr = '0xa49403Be3806eb19F27163D396f8A77b40b75C5f'
+        // const stakingContractAddr = '0xa49403Be3806eb19F27163D396f8A77b40b75C5f'
+        const stakingContractAddr = '0x0d0791b125689bA5152F4940dACD54dBfB850618'
 
         const web3 = new Web3('https://data-seed-prebsc-1-s1.binance.org:8545/')
         web3.eth.setProvider(Web3.givenProvider); //chuyen sang MM provider, neu khong se gap loi Returned error: unknown account
@@ -89,7 +90,7 @@ const withWallet = (OriginalComponent) => {
         // Staking start
         const [stakingStart, setstakingStart] = useState('')
         stakingContract.methods.stakingStarts().call((error, result) => {
-            setstakingStart(new Date(result * 1000).toLocaleString())
+            setstakingStart(result)
         })
 
         // Contribution close
@@ -108,8 +109,6 @@ const withWallet = (OriginalComponent) => {
         // Control token contract 
         const tokenAddr = '0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83'
         const tokenNPO = new web3.eth.Contract(tokenContract.abi, tokenAddr)
-
-
 
         return (
             <OriginalComponent
