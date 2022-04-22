@@ -109,10 +109,11 @@ const withWallet = (OriginalComponent) => {
         const tokenAddr = '0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83'
         const tokenNPO = new web3.eth.Contract(tokenContract.abi, tokenAddr)
 
-        
+
 
         return (
             <OriginalComponent
+                stakingContractAddr={stakingContractAddr}
                 account={account}
                 connectMM={connectMM}
                 onAccountChange={onAccountChange}

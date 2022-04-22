@@ -1,5 +1,4 @@
 import './header.css'
-import { useState } from 'react'
 import withWallet from '../HOC/hoc';
 function Header(props) {
     let txLink = `https://testnet.bscscan.com/address/${props.account}#tokentxns`
