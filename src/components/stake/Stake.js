@@ -10,21 +10,11 @@ const stakingContractAddr = '0xa49403Be3806eb19F27163D396f8A77b40b75C5f'
 
 function Stake(props) {
   // Call from HOC - Reuse functions/code fro Higher Order Component
-  props.connectMM()
   props.onAccountChange()
-  let account = props.account
-  let chain = props.chain
-  let stakingContract = props.stakingContract
-  let tokenNPO = props.tokenNPO
-  let poolName = props.poolName
-  let stakingCap = props.stakingCap
-  let stakedBalance = props.stakedBalance
-  let earlyWithdraw = props.earlyWithdraw
-  let yourStakedBalance = props.yourStakedBalance
 
   let setStakedBalance = props.setStakedBalance
   let setYourStakedBalance = props.setYourStakedBalance
-  let getyourStakedBalance=props.getyourStakedBalance
+  let getyourStakedBalance = props.getyourStakedBalance
   // Stake & Unstake
   const [txHash, setTxHash] = useState('')
 
@@ -38,7 +28,7 @@ function Stake(props) {
     document.querySelector('.success').style.display = 'none';
 
     // Balance
-    const balance = await tokenNPO.methods.balanceOf(account).call()
+    const balance = await props.tokenNPO.methods.balanceOf(props.account).call()
 
     //Step 1: Call the NPO token contract & approve the amount contract (to Set Allowance)
     if (amount === '' || amount < 0) {
@@ -46,7 +36,7 @@ function Stake(props) {
       setMessageVisibility(false)
     } else if (amount > balance / 1e18) {
       alert('Not enough NPO balance') // check wallet balance
-    } else if (stakingCap == stakedBalance) {
+    } else if (props.stakingCap == props.stakedBalance) {
       alert('Pool was fulfilled, please stake into another pool!') // check if pool was fulfilled
     } else {
       setMessageVisibility(true)
@@ -56,7 +46,7 @@ function Stake(props) {
       amount = BigNumber(amount * 1e18).toFixed(0)
       console.log(amount)
 
-      await tokenNPO.methods.approve(stakingContractAddr, amount).send({ from: account },)
+      await props.tokenNPO.methods.approve(stakingContractAddr, props.account).send({ from: props.account },)
         .on('transactionHash', function (hash) {
           console.log(`Set allowance onTransactionHash ${hash}`)
           setMessage('Setting ALLOWANCE, please wait...!')
@@ -65,7 +55,7 @@ function Stake(props) {
           console.log(receipt);
           setMessage('Waiting for STAKING confirmation, please confirm it on your Metamask extension')
 
-          stakingContract.methods.stake(amount).send({ from: account })
+          props.stakingContract.methods.stake(props.account).send({ from: props.account })
             .on('transactionHash', function (hash) {
               console.log(`Staking onTransactionHash ${hash}`)
               setMessage('Confirming, please wait...!')
@@ -111,13 +101,10 @@ function Stake(props) {
     if (amount === '' || amount < 0) {
       alert('Please input a positive amount number') //user has to input amount before click on stake button
       setMessageVisibility(false)
-    } else if (parseFloat(amount) > parseFloat(yourStakedBalance)) {
-      console.log(amount)
-      console.log(yourStakedBalance)
-      console.log(stakedBalance)
+    } else if (parseFloat(amount) > parseFloat(props.yourStakedBalance)) {
       alert('You could not withdraw more than what you staked')
-    } else if (Date.now() < earlyWithdraw * 1000) {
-      alert(`Could not withdraw, you can withdraw from  ${new Date(earlyWithdraw * 1000).toLocaleString()}`)
+    } else if (Date.now() < props.earlyWithdraw * 1000) {
+      alert(`Could not withdraw, you can withdraw from  ${new Date(props.earlyWithdraw * 1000).toLocaleString()}`)
     } else {
       setMessageVisibility(true)
       //handle amount (number bigint)
@@ -125,14 +112,14 @@ function Stake(props) {
       setMessage('Waiting for WITHDRAW confirmation, please confirm it on your Metamask extension')
 
 
-      await stakingContract.methods.withdraw(amount).send({ from: account })
+      await props.stakingContract.methods.withdraw(props.account).send({ from: props.account })
         .on('transactionHash', function (txHash) {
           setMessage('Processing, please wait...!')
 
         })
-        .on('confirmation', function (confirmationNumber, receipt) {
-          console.log(`onConfirmation ${confirmationNumber}`)
-        })
+        // .on('confirmation', function (confirmationNumber, receipt) {
+        //   console.log(`onConfirmation ${confirmationNumber}`)
+        // })
         .on('receipt', async function (receipt) {
           setTxHash(receipt.transactionHash)
           getyourStakedBalance()
@@ -147,7 +134,7 @@ function Stake(props) {
           setMessageVisibility(false)
           setTxHash(receipt.transactionHash)
           setStakedBalance(() => {
-            stakingContract.methods.stakeOf(account).call((error, result) => {
+            props.stakingContract.methods.stakeOf(props.account).call((error, result) => {
               setYourStakedBalance((result / 1e18).toLocaleString('en-EN'))
             })
           })
@@ -158,10 +145,10 @@ function Stake(props) {
     <div className='content'>
       {messageVisibility && <MessageBoard message={message} />}
       <div className='stakeBox'>
-        <p><span className='boldText'>{poolName}</span></p>
-        <p>{chain}</p>
+        <p><span className='boldText'>{props.poolName}</span></p>
+        <p>{props.chain}</p>
         <p><span className='boldText'>YOUR ADDRESS</span></p>
-        <p>{account}</p>
+        <p>{props.account}</p>
         <p><span className='boldText'>CONTRACT ADDRESS</span></p>
         <p>{stakingContractAddr}</p>
         <input className='amount' placeholder='Please input the amount...' type='number' min={0} />

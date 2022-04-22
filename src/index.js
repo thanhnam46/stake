@@ -10,7 +10,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 let account = window.ethereum.request({ method: 'eth_requestAccounts' }, (error) => {
   if (error) {
     console.log(error)
-  }else{
+  } else {
     console.log(account[0])
   }
 })[0];

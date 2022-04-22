@@ -7,6 +7,7 @@ const withWallet = (OriginalComponent) => {
     function NewComponent(props) {
         // Get/Set Wallet Address
         const [account, setAccount] = useState('0x0000000000000000000000000000000000000000')
+        connectMM()
         async function connectMM() {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }, (error) => {
                 if (error) {
@@ -50,6 +51,7 @@ const withWallet = (OriginalComponent) => {
         const web3 = new Web3('https://data-seed-prebsc-1-s1.binance.org:8545/')
         web3.eth.setProvider(Web3.givenProvider); //chuyen sang MM provider, neu khong se gap loi Returned error: unknown account
         const stakingContract = new web3.eth.Contract(FestakedWithReward.abi, stakingContractAddr)
+
         // Your staked balance
         const [yourStakedBalance, setYourStakedBalance] = useState('')
         getyourStakedBalance()
@@ -106,6 +108,8 @@ const withWallet = (OriginalComponent) => {
         // Control token contract 
         const tokenAddr = '0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83'
         const tokenNPO = new web3.eth.Contract(tokenContract.abi, tokenAddr)
+
+        
 
         return (
             <OriginalComponent
