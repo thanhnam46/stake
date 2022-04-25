@@ -5,6 +5,17 @@ import tokenContract from "../../artifacts/contracts/tokenContract/tokenContract
 
 const withWallet = (OriginalComponent) => {
   function NewComponent(props) {
+    // Check Chain
+    let chain = "";
+    if (typeof window.ethereum == "undefined") {
+      alert("Please install Metamask extension first!");
+    } else {
+      if (window.ethereum.networkVersion === "97") {
+        chain = "You are connected to BSC tesnet";
+      } else {
+        chain = "Please connect your Wallet to BSC tesnet!!!";
+      }
+    }
     // Get/Set Wallet Address
     const [account, setAccount] = useState(
       "0x0000000000000000000000000000000000000000"
@@ -27,18 +38,6 @@ const withWallet = (OriginalComponent) => {
       window.ethereum.on("accountsChanged", async () => {
         setAccount(window.ethereum.selectedAddress);
       });
-    }
-
-    // Check Chain
-    let chain = "";
-    if (typeof window.ethereum == "undefined") {
-      alert('Please install Metamask extension first!')
-    } else {
-      if (window.ethereum.networkVersion === "97") {
-        chain = "You are connected to BSC tesnet";
-      } else {
-        chain = "Please connect your Wallet to BSC tesnet!!!";
-      }
     }
 
     window.ethereum.on("chainChanged", (chainID) => {
