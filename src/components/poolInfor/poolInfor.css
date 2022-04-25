@@ -1,13 +1,13 @@
 .poolInfor {
-    width: 50%;
-    margin: auto;
-    list-style: none;
-    background-color: #ccc;
-    border-radius: 15px
+  width: 50%;
+  margin: auto;
+  list-style: none;
+  background-color: #ccc;
+  border-radius: 15px;
 }
 
-.poolInfor>ul {
-    list-style: none;
-    line-height: 2;
-    padding: 0 40px
+.poolInfor > ul {
+  list-style: none;
+  line-height: 2;
+  padding: 0 40px;
 }

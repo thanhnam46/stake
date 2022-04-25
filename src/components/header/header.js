@@ -1,16 +1,24 @@
-import './header.css'
-import withWallet from '../HOC/hoc';
+import "./header.css";
+import withWallet from "../HOC/hoc";
 function Header(props) {
-    let txLink = `https://testnet.bscscan.com/address/${props.account}#tokentxns`
-    props.onAccountChange()
+  let txLink = `https://testnet.bscscan.com/address/${props.account}#tokentxns`;
+  props.onAccountChange();
 
-    return (
-        <header className='header'>
-            <img className='logo' src='https://imgur.com/Qxw1soD.jpeg' alt='logo'></img>
-            <a href={txLink} className='links' target="_blank">Transaction</a>
-            <a href='https://staking.spores.app' className='links'>Staking Options</a>
-        </header>
-    )
+  return (
+    <header className="header">
+      <img
+        className="logo"
+        src="https://imgur.com/Qxw1soD.jpeg"
+        alt="logo"
+      ></img>
+      <a href={txLink} className="links" target="_blank">
+        Transaction
+      </a>
+      <a href="https://staking.spores.app" className="links">
+        Staking Options
+      </a>
+    </header>
+  );
 }
 
-export default withWallet(Header)
+export default withWallet(Header);

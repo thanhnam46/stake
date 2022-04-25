@@ -1,24 +1,27 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import Header from './components/header/header'
-import Stake from './components/stake/Stake';
-import PoolInfor from './components/poolInfor/poolInfor';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import Header from "./components/header/header";
+import Stake from "./components/stake/Stake";
+import PoolInfor from "./components/poolInfor/poolInfor";
+import reportWebVitals from "./reportWebVitals";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-let account = window.ethereum.request({ method: 'eth_requestAccounts' }, (error) => {
-  if (error) {
-    console.log(error)
-  } else {
-    console.log(account[0])
+const root = ReactDOM.createRoot(document.getElementById("root"));
+let account = window.ethereum.request(
+  { method: "eth_requestAccounts" },
+  (error) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log(account[0]);
+    }
   }
-})[0];
+)[0];
 
 root.render(
   <React.StrictMode>
     <Header />
-    <div className='container'>
+    <div className="container">
       <Stake account={account} />
       <PoolInfor />
     </div>
