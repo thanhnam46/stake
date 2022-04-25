@@ -31,10 +31,14 @@ const withWallet = (OriginalComponent) => {
 
     // Check Chain
     let chain = "";
-    if (window.ethereum.networkVersion === "97") {
-      chain = "You are connected to BSC tesnet";
+    if (typeof window.ethereum == "undefined") {
+      alert('Please install Metamask extension first!')
     } else {
-      chain = "Please connect your Wallet to BSC tesnet!!!";
+      if (window.ethereum.networkVersion === "97") {
+        chain = "You are connected to BSC tesnet";
+      } else {
+        chain = "Please connect your Wallet to BSC tesnet!!!";
+      }
     }
 
     window.ethereum.on("chainChanged", (chainID) => {

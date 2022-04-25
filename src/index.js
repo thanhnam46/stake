@@ -8,25 +8,15 @@ import reportWebVitals from "./reportWebVitals";
 import Footer from "./components/footer/footer";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-let account = window.ethereum.request(
-  { method: "eth_requestAccounts" },
-  (error) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log(account[0]);
-    }
-  }
-)[0];
 
 root.render(
   <React.StrictMode>
     <Header />
     <div className="container">
-      <Stake account={account} />
+      <Stake />
       <PoolInfor />
     </div>
-    <Footer/>
+    <Footer />
   </React.StrictMode>
 );
 
