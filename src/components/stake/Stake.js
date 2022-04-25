@@ -109,7 +109,7 @@ function Stake(props) {
         <p>{props.chain}</p>
         <p><span className='boldText'>YOUR ADDRESS</span></p>
         <p>{props.account}</p>
-        <p><span className='boldText'>CONTRACT ADDRESS</span></p>
+        <p><span className='boldText'>CONTRACT ADDRESS </span><br/>NEVER SEND tokens to the contract, please!</p>
         <p>{props.stakingContractAddr}</p>
         <input className='amount' placeholder='Please input the amount...' type='number' min={0} required />
         <div className='btns'>

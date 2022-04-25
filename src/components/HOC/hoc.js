@@ -77,7 +77,7 @@ const withWallet = (OriginalComponent) => {
         // Staked so far
         const [stakedBalance, setStakedBalance] = useState('')
         stakingContract.methods.stakedBalance().call((error, result) => {
-            setStakedBalance(result / 1e18)
+            setStakedBalance((result/1e18).toLocaleString('en-EN'))
         })
 
         // Early Withdraw open
