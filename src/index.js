@@ -5,6 +5,7 @@ import Header from "./components/header/header";
 import Stake from "./components/stake/Stake";
 import PoolInfor from "./components/poolInfor/poolInfor";
 import reportWebVitals from "./reportWebVitals";
+import Footer from "./components/footer/footer";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 let account = window.ethereum.request(
@@ -25,6 +26,7 @@ root.render(
       <Stake account={account} />
       <PoolInfor />
     </div>
+    <Footer/>
   </React.StrictMode>
 );
 
