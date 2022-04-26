@@ -17,7 +17,7 @@ const withWallet = (OriginalComponent) => {
         chain = <span className="boldText">Please connect your Wallet to BSC tesnet!!!</span>
       }
     }
-    
+
     const formVisibility = (window.ethereum.networkVersion === "97")
 
     // Get/Set Wallet Address
@@ -58,8 +58,8 @@ const withWallet = (OriginalComponent) => {
 
     // Work with staking contract
     // const stakingContractAddr = "0x1FE470E4E533EeA525b2f2c34a9EbB995597C143"
-    const stakingContractAddr = "0xa49403Be3806eb19F27163D396f8A77b40b75C5f"
-    // const stakingContractAddr = "0x0d0791b125689bA5152F4940dACD54dBfB850618"
+    // const stakingContractAddr = "0xa49403Be3806eb19F27163D396f8A77b40b75C5f"
+    const stakingContractAddr = "0x0d0791b125689bA5152F4940dACD54dBfB850618"
 
     const web3 = new Web3("https://data-seed-prebsc-1-s1.binance.org:8545/")
     web3.eth.setProvider(Web3.givenProvider) // chuyen sang MM provider, neu khong se gap loi Returned error: unknown account

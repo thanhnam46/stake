@@ -27,7 +27,7 @@ function Stake(props) {
       .call()
 
     // Step 1: Call the NPO token contract & approve the amount contract (to Set Allowance)
-    if (amount === "" || amount < 0) {
+    if (amount === "" || amount <= 0) {
       alert("Please input a positive amount") // user has to input amount before click on stake button
       setMessageVisibility(false)
     } else if (Date.now() < props.stakingStart * 1000) {
@@ -87,7 +87,7 @@ function Stake(props) {
   async function unStakeToken() {
     let amount = await document.querySelector(".amount").value
 
-    if (amount === "" || amount < 0) {
+    if (amount === "" || amount <= 0) {
       alert("Please input a positive amount number") // user has to input amount before click on stake button
       setMessageVisibility(false)
     } else if (parseFloat(amount) > parseFloat(props.yourStakedBalance)) {
