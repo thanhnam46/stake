@@ -5,7 +5,6 @@ import tokenContract from "../../artifacts/contracts/tokenContract/tokenContract
 
 const withWallet = (OriginalComponent) => {
   function NewComponent(props) {
-    const formVisibility = (window.ethereum.networkVersion === "97")
     // Check Chain
     let chain = ""
     if (typeof window.ethereum === "undefined") {
@@ -15,9 +14,12 @@ const withWallet = (OriginalComponent) => {
         chain = "You are connected to BSC tesnet"
 
       } else {
-        chain = <span className="boldText">Please connect your Wallet to BSC tesnet!!!</span> 
+        chain = <span className="boldText">Please connect your Wallet to BSC tesnet!!!</span>
       }
     }
+    
+    const formVisibility = (window.ethereum.networkVersion === "97")
+
     // Get/Set Wallet Address
     const [account, setAccount] = useState(
       "0x0000000000000000000000000000000000000000"
