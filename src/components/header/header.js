@@ -1,5 +1,4 @@
 import React from "react"
-import PropTypes from "prop-types"
 import "./header.css"
 import withWallet from "../HOC/hoc"
 function Header (props) {
@@ -21,11 +20,6 @@ function Header (props) {
       </a>
     </header>
   )
-}
-
-Header.propTypes = {
-  account: PropTypes.string.isRequired,
-  onAccountChange: PropTypes.func.isRequired
 }
 
 export default withWallet(Header)

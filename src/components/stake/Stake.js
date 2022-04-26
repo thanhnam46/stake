@@ -4,7 +4,7 @@ import BigNumber from "bignumber.js"
 import MessageBoard from "../overlayMessageBoard/messageBoard"
 import withWallet from "../HOC/hoc"
 
-function Stake (props) {
+function Stake(props) {
   // Call from HOC - Reuse functions/code fro Higher Order Component
   props.onAccountChange()
 
@@ -18,7 +18,7 @@ function Stake (props) {
   const [message, setMessage] = useState("")
   const [clsBtnVis, setClsBtnVis] = useState(false)
 
-  async function stakeToken () {
+  async function stakeToken() {
     let amount = await document.querySelector(".amount").value
 
     // Balance
@@ -84,7 +84,7 @@ function Stake (props) {
     }
   }
 
-  async function unStakeToken () {
+  async function unStakeToken() {
     let amount = await document.querySelector(".amount").value
 
     if (amount === "" || amount < 0) {
@@ -150,23 +150,24 @@ function Stake (props) {
           NEVER SEND tokens to the contract, please!
         </p>
         <p>{props.stakingContractAddr}</p>
-        <input
+        {props.formVisibility && <input
           className="amount"
           placeholder="Please input the amount..."
           type="number"
           min={0}
           required
-        />
-        <div className="btns">
+        />}
+        {props.formVisibility && <div className="btns">
           <a href="#" className="btn" onClick={stakeToken}>
             Stake
           </a>
           <a href="#" className="btn" onClick={unStakeToken}>
             UnStake
           </a>
-        </div>
+        </div>}
       </div>
     </div>
+
   )
 }
 export default withWallet(Stake)
