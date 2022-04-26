@@ -1,6 +1,7 @@
-import "./footer.css";
-import sporesLogo from "../../sporesLogo.svg";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react"
+import "./footer.css"
+import sporesLogo from "../../sporesLogo.svg"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faYoutube,
   faMedium,
@@ -9,9 +10,9 @@ import {
   faFacebook,
   faTelegram,
   faTwitter,
-  faLinkedin,
-} from "@fortawesome/fontawesome-free-brands";
-function Footer() {
+  faLinkedin
+} from "@fortawesome/fontawesome-free-brands"
+function Footer () {
   return (
     <div className="footer">
       <ul className="menu listStyleNone">
@@ -21,6 +22,9 @@ function Footer() {
         </li>
         <li>
           <a href="https://marketplace.spores.app/">Marketplace</a>
+        </li>
+        <li>
+          <a href="https://republique.spores.app/">Republique</a>
         </li>
       </ul>
       <div className="connect">
@@ -88,6 +92,6 @@ function Footer() {
       </ul>
       <img src={sporesLogo} />
     </div>
-  );
+  )
 }
-export default Footer;
+export default Footer

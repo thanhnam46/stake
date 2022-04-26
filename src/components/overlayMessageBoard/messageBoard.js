@@ -1,10 +1,11 @@
-import "./messageBoard.css";
-function MessageBoard(props) {
-  function handleMsBoard() {
-    window.location.reload();
+import React from "react"
+import "./messageBoard.css"
+function MessageBoard (props) {
+  function handleMsBoard () {
+    window.location.reload()
   }
   return (
-    <div className="messageBoard">
+    <div className='messageBoard'>
       <p>
         {props.message}
         <br />
@@ -14,7 +15,7 @@ function MessageBoard(props) {
       </p>
       {props.clsBtnVis && <a onClick={handleMsBoard}>Close</a>}
     </div>
-  );
+  )
 }
 
-export default MessageBoard;
+export default MessageBoard

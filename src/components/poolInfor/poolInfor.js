@@ -1,8 +1,9 @@
-import "./poolInfor.css";
-import withWallet from "../HOC/hoc";
+import React from "react"
+import "./poolInfor.css"
+import withWallet from "../HOC/hoc"
 
 function PoolInfor(props) {
-  props.onAccountChange();
+  props.onAccountChange()
 
   return (
     <div className="poolInfor">
@@ -47,6 +48,6 @@ function PoolInfor(props) {
         </li>
       </ul>
     </div>
-  );
+  )
 }
-export default withWallet(PoolInfor);
+export default withWallet(PoolInfor)

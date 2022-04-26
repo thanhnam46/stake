@@ -1,43 +1,43 @@
-import React, { useState } from "react";
-import Web3 from "web3/dist/web3.min";
-import FestakedWithReward from "../../artifacts/contracts/FestakedWithReward.sol/FestakedWithReward.json";
-import tokenContract from "../../artifacts/contracts/tokenContract/tokenContract.json";
+import React, { useState } from "react"
+import Web3 from "web3/dist/web3.min"
+import FestakedWithReward from "../../artifacts/contracts/FestakedWithReward.sol/FestakedWithReward.json"
+import tokenContract from "../../artifacts/contracts/tokenContract/tokenContract.json"
 
 const withWallet = (OriginalComponent) => {
   function NewComponent(props) {
     // Check Chain
-    let chain = "";
-    if (typeof window.ethereum == "undefined") {
-      alert("Please install Metamask extension first!");
+    let chain = ""
+    if (typeof window.ethereum === "undefined") {
+      alert("Please install Metamask extension first!")
     } else {
       if (window.ethereum.networkVersion === "97") {
-        chain = "You are connected to BSC tesnet";
+        chain = "You are connected to BSC tesnet"
       } else {
-        chain = "Please connect your Wallet to BSC tesnet!!!";
+        chain = "Please connect your Wallet to BSC tesnet!!!"
       }
     }
     // Get/Set Wallet Address
     const [account, setAccount] = useState(
       "0x0000000000000000000000000000000000000000"
-    );
-    connectMM();
+    )
+    connectMM()
     async function connectMM() {
       const accounts = await window.ethereum.request(
         { method: "eth_requestAccounts" },
         (error) => {
           if (error) {
-            console.log(error);
+            console.log(error)
           }
         }
-      );
-      setAccount(accounts[0]);
+      )
+      setAccount(accounts[0])
     }
 
     // On Account Changed
     function onAccountChange() {
       window.ethereum.on("accountsChanged", async () => {
-        setAccount(window.ethereum.selectedAddress);
-      });
+        setAccount(window.ethereum.selectedAddress)
+      })
     }
 
     window.ethereum.on("chainChanged", (chainID) => {
@@ -45,80 +45,80 @@ const withWallet = (OriginalComponent) => {
       // Correctly handling chain changes can be complicated.
       // We recommend reloading the page unless you have good reason not to.
       if (parseInt(chainID).toString === "97") {
-        chain = "You are connected to BSC tesnet";
+        chain = "You are connected to BSC tesnet"
       } else {
-        chain = "Please connect to BSC tesnet!!!";
+        chain = "Please connect to BSC tesnet!!!"
       }
-      window.location.reload();
-    });
+      window.location.reload()
+    })
 
-    //Work with staking contract
-    // const stakingContractAddr = '0x1FE470E4E533EeA525b2f2c34a9EbB995597C143'
-    // const stakingContractAddr = '0xa49403Be3806eb19F27163D396f8A77b40b75C5f'
-    const stakingContractAddr = "0x0d0791b125689bA5152F4940dACD54dBfB850618";
+    // Work with staking contract
+    // const stakingContractAddr = "0x1FE470E4E533EeA525b2f2c34a9EbB995597C143"
+    // const stakingContractAddr = "0xa49403Be3806eb19F27163D396f8A77b40b75C5f"
+    const stakingContractAddr = "0x0d0791b125689bA5152F4940dACD54dBfB850618"
 
-    const web3 = new Web3("https://data-seed-prebsc-1-s1.binance.org:8545/");
-    web3.eth.setProvider(Web3.givenProvider); //chuyen sang MM provider, neu khong se gap loi Returned error: unknown account
+    const web3 = new Web3("https://data-seed-prebsc-1-s1.binance.org:8545/")
+    web3.eth.setProvider(Web3.givenProvider) // chuyen sang MM provider, neu khong se gap loi Returned error: unknown account
     const stakingContract = new web3.eth.Contract(
       FestakedWithReward.abi,
       stakingContractAddr
-    );
+    )
 
     // Your staked balance
-    const [yourStakedBalance, setYourStakedBalance] = useState("");
-    getyourStakedBalance();
+    const [yourStakedBalance, setYourStakedBalance] = useState("")
+    getyourStakedBalance()
     function getyourStakedBalance() {
-      stakingContract.methods.stakeOf(account).call((error, result) => {
-        setYourStakedBalance((result / 1e18).toLocaleString("en-EN"));
-      });
+      stakingContract.methods.stakeOf(account).call((error,result) => {
+        setYourStakedBalance((result / 1e18).toLocaleString("en-EN"))
+      })
     }
 
     // Pool Name
-    const [poolName, setPoolName] = useState("");
-    stakingContract.methods.name().call((error, result) => {
-      setPoolName(result);
-    });
+    const [poolName, setPoolName] = useState("")
+    stakingContract.methods.name().call((error,result) => {
+      setPoolName(result)
+    })
 
     // Get staking cap
-    const [stakingCap, setStakingCap] = useState("");
-    stakingContract.methods.stakingCap().call((error, result) => {
-      setStakingCap((result / 1e18).toLocaleString("en-EN"));
-    });
+    const [stakingCap, setStakingCap] = useState("")
+    stakingContract.methods.stakingCap().call((error,result) => {
+      setStakingCap((result / 1e18).toLocaleString("en-EN"))
+    })
 
     // Staked so far
-    const [stakedBalance, setStakedBalance] = useState("");
-    stakingContract.methods.stakedBalance().call((error, result) => {
-      setStakedBalance((result / 1e18).toLocaleString("en-EN"));
-    });
+    const [stakedBalance, setStakedBalance] = useState("")
+    stakingContract.methods.stakedBalance().call((error,result) => {
+      setStakedBalance((result / 1e18).toLocaleString("en-EN"))
+    })
 
     // Early Withdraw open
-    const [earlyWithdraw, setEarlyWithdraw] = useState("");
-    stakingContract.methods.withdrawStarts().call((error, result) => {
+    const [earlyWithdraw, setEarlyWithdraw] = useState("")
+    stakingContract.methods.withdrawStarts().call((error,result) => {
       // setEarlyWithdraw(new Date(result * 1000).toLocaleString())
-      setEarlyWithdraw(result);
-    });
+      setEarlyWithdraw(result)
+    })
 
     // Staking start
-    const [stakingStart, setstakingStart] = useState("");
-    stakingContract.methods.stakingStarts().call((error, result) => {
-      setstakingStart(result);
-    });
+    const [stakingStart, setstakingStart] = useState("")
+    stakingContract.methods.stakingStarts().call((error,result) => {
+      setstakingStart(result)
+    })
 
     // Contribution close
-    const [stakingEnds, setstakingEnds] = useState("");
-    stakingContract.methods.stakingEnds().call((error, result) => {
-      setstakingEnds(result);
-    });
+    const [stakingEnds, setstakingEnds] = useState("")
+    stakingContract.methods.stakingEnds().call((error,result) => {
+      setstakingEnds(result)
+    })
 
     // Maturity at
-    const [maturityAt, setMaturityAt] = useState("");
-    stakingContract.methods.withdrawEnds().call((error, result) => {
-      setMaturityAt(new Date(result * 1000).toLocaleString());
-    });
+    const [maturityAt, setMaturityAt] = useState("")
+    stakingContract.methods.withdrawEnds().call((error,result) => {
+      setMaturityAt(new Date(result * 1000).toLocaleString())
+    })
 
     // Control token contract
-    const tokenAddr = "0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83";
-    const tokenNPO = new web3.eth.Contract(tokenContract.abi, tokenAddr);
+    const tokenAddr = "0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83"
+    const tokenNPO = new web3.eth.Contract(tokenContract.abi, tokenAddr)
 
     return (
       <OriginalComponent
@@ -141,8 +141,8 @@ const withWallet = (OriginalComponent) => {
         tokenNPO={tokenNPO}
         getyourStakedBalance={getyourStakedBalance}
       />
-    );
+    )
   }
-  return NewComponent;
-};
-export default withWallet;
+  return NewComponent
+}
+export default withWallet
