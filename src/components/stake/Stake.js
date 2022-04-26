@@ -88,7 +88,7 @@ function Stake(props) {
     let amount = await document.querySelector(".amount").value
 
     if (amount === "" || amount <= 0) {
-      alert("Please input a positive amount number") // user has to input amount before click on stake button
+      alert("Please input a positive amount") // user has to input amount before click on stake button
       setMessageVisibility(false)
     } else if (parseFloat(amount) > parseFloat(props.yourStakedBalance)) {
       alert("You could not withdraw more than what you staked")
@@ -145,11 +145,13 @@ function Stake(props) {
         </p>
         <p>{props.account}</p>
         <p>
-          <span className="boldText">CONTRACT ADDRESS </span>
+          {props.formVisibility && <span className="boldText">CONTRACT ADDRESS </span>}
           <br />
-          NEVER SEND tokens to the contract, please!
+          NEVER SEND tokens to the contract
+          <br />
+          Please, USE THIS APP for staking instead
         </p>
-        <p>{props.stakingContractAddr}</p>
+        {props.formVisibility && <p>{props.stakingContractAddr}</p>}
         {props.formVisibility && <input
           className="amount"
           placeholder="Please input the amount..."

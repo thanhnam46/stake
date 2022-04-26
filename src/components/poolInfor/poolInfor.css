@@ -1,6 +1,6 @@
 .poolInfor {
   width: 50%;
-  margin: auto;
+  margin: 0;
   list-style: none;
   background-color: #ccc;
   border-radius: 15px;
@@ -9,5 +9,6 @@
 .poolInfor > ul {
   list-style: none;
   line-height: 2;
-  padding: 0 40px;
+  padding: 20px 40px;
+  margin: 0;
 }

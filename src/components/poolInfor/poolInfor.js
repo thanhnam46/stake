@@ -6,7 +6,8 @@ function PoolInfor(props) {
   props.onAccountChange()
 
   return (
-    <div className="poolInfor">
+
+    props.formVisibility && <div className="poolInfor">
       <ul>
         <li>
           Your staked balance{" "}
@@ -16,7 +17,7 @@ function PoolInfor(props) {
           Staking cap <span className="boldText">{props.stakingCap} NPO</span>{" "}
         </li>
         <li>
-          Pool balance{" "}
+          Pool's total balance{" "}
           <span className="boldText">{props.stakedBalance} NPO</span>
         </li>
         <li>
@@ -48,6 +49,7 @@ function PoolInfor(props) {
         </li>
       </ul>
     </div>
+
   )
 }
 export default withWallet(PoolInfor)
