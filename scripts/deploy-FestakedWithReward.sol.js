@@ -17,18 +17,21 @@ async function main() {
   const FestakedWithReward = await hre.ethers.getContractFactory("FestakedWithReward",{
     libraries: {
       // FestakedLib: "0x4a82768Db3cB87aF402F5882566AbD31cB8d901f", // Rinkeby Lib
-      FestakedLib: "0x5480516E1393D45cc1ADeD2Eb2d7fC30429E4F7f", // bscTestnet Lib
+      // FestakedLib: "0x5480516E1393D45cc1ADeD2Eb2d7fC30429E4F7f", // bscTestnet Lib
+      FestakedLib: "0x1178CA4D6306fa364660F490c5ca95d0fbF86608", // BSC Mainnet Lib
     },
   });
   const stakingContract = await FestakedWithReward.deploy(
-    "Nam test Staking contract 3", //Name
-    "0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83", //token address
-    "0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83", //rewardTokenAddress_
-    "1650623084", //stakingStarts_
-    "1651055084", //stakingEnds_
-    "1651055085", //withdrawStarts_
-    "1651227885", //withdrawEnds_
-    "100000000000000000000000000", //stakingCap_
+    "Spores piloting mini staking pool", //Name
+    // "0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83", //Testnet token address
+    "0x8357c604c5533fa0053BeAaA1494Da552ceA38f7", //Mainnet token address
+    // "0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83", //Testnet rewardTokenAddress_
+    "0x8357c604c5533fa0053BeAaA1494Da552ceA38f7", //Mainnet rewardTokenAddress_
+    "1651053600", //stakingStarts_
+    "1651831200", //stakingEnds_
+    "1651831201", //withdrawStarts_
+    "1652263200", //withdrawEnds_
+    "500000000000000000000000", //stakingCap_
     //{gasLimit: 10000000}    //rinkeby
     {gasLimit: 10000000}    //bscTestnet
     );

@@ -20,7 +20,7 @@ function Stake(props) {
 
   async function stakeToken() {
     let amount = await document.querySelector(".amount").value
-
+    console.log(amount)
     // Balance
     const balance = await props.tokenNPO.methods
       .balanceOf(props.account)
