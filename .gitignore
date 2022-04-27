@@ -30,5 +30,5 @@ typechain
 
 #Hardhat files
 cache
-artifacts
+# artifacts
 hardhat.config.js
