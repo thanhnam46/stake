@@ -11,14 +11,14 @@ function PoolInfor(props) {
       <ul>
         <li>
           Your staked balance{" "}
-          <span className="boldText">{props.yourStakedBalance} NPO </span>
+          <span className="boldText">{props.yourStakedBalance} SPO </span>
         </li>
         <li>
-          Staking cap <span className="boldText">{props.stakingCap} NPO</span>{" "}
+          Staking cap <span className="boldText">{props.stakingCap} SPO</span>{" "}
         </li>
         <li>
           Pool's total balance{" "}
-          <span className="boldText">{props.stakedBalance} NPO</span>
+          <span className="boldText">{props.stakedBalance} SPO</span>
         </li>
         <li>
           Maturity reward <span className="boldText">30% APR</span>
