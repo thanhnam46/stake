@@ -37,7 +37,7 @@ function Stake(props) {
         ).toLocaleString()}`
       )
     } else if (amount > balance / 1e18) {
-      alert("Not enough NPO balance") // check wallet balance
+      alert("Not enough SPO balance") // check wallet balance
     } else if (props.stakingCap === props.stakedBalance) {
       alert("Pool was fulfilled, please stake into another pool!") // check if pool was fulfilled
     } else {
