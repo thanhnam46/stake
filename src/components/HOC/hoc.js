@@ -14,7 +14,7 @@ const withWallet = (OriginalComponent) => {
         chain = "You are connected to BSC"
 
       } else {
-        chain = <span className="boldText">Please connect your Wallet to BSC tesnet!!!</span>
+        chain = <span className="boldText">Please connect your Wallet to BSC!!!</span>
       }
     }
 
