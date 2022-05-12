@@ -28,8 +28,6 @@ function Stake(props) {
 
     // Step 1: Call the NPO token contract & approve the amount contract (to Set Allowance)
     if (props.stakingEnds * 1000 < Date.now()) {
-      console.log(Date.now())
-      console.log(props.stakingEnds * 1000)
       alert('Contribution was CLOSED, please choose another pool!')
     } else if (amount === "" || amount <= 0) {
       alert("Please input a positive amount") // user has to input amount before click on stake button
