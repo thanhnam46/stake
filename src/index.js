@@ -11,12 +11,14 @@ const root = ReactDOM.createRoot(document.getElementById("root"))
 
 root.render(
   <React.StrictMode>
-    <Header />
-    <div className="container">
-      <Stake />
-      <PoolInfor />
+    <div className="wrapper">
+      <Header />
+      <div className="container">
+        <Stake />
+        <PoolInfor />
+      </div>
+      <Footer />
     </div>
-    <Footer />
   </React.StrictMode>
 )
 

@@ -11,7 +11,7 @@ function PoolInfor(props) {
       <ul>
         <li>
           Your staked balance{" "}
-          <span className="boldText">{props.yourStakedBalance} SPO </span>
+          <span className="boldText">{props.yourStakedBalance.toLocaleString("en-EN")} SPO </span>
         </li>
         <li>
           Staking cap <span className="boldText">{props.stakingCap} SPO</span>{" "}

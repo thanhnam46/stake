@@ -1,15 +1,14 @@
 .footer {
   display: flex;
   justify-content: space-around;
-  height: 200px;
+  height: 120px;
   bottom: 0;
   line-height: 1.6;
-  padding-top: 60px;
+  padding: 10px 0;
   background-color: #f2f2fb;
   bottom: 0;
   right: 0;
   width: 100%;
-  position: fixed;
 }
 
 .footer > ul,

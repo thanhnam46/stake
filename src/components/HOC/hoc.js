@@ -5,15 +5,12 @@ import tokenContract from "../../artifacts/contracts/tokenContract/tokenContract
 
 const withWallet = (OriginalComponent) => {
   function NewComponent(props) {
-    useEffect(() => {
-      document.title = "Spores staking pool"
-    }, []);
     // Check Chain
     let chain = ""
     if (typeof window.ethereum === "undefined") {
       alert("Please install Metamask extension first!")
     } else {
-      if (window.ethereum.networkVersion === "97") {
+      if (window.ethereum.networkVersion === process.env.REACT_APP_NETWORK_VERSION) {
         chain = "You are connected to BSC"
 
       } else {
@@ -21,7 +18,7 @@ const withWallet = (OriginalComponent) => {
       }
     }
 
-    const formVisibility = (window.ethereum.networkVersion === "97")
+    const formVisibility = (window.ethereum.networkVersion === process.env.REACT_APP_NETWORK_VERSION)
 
     // Get/Set Wallet Address
     const [account, setAccount] = useState(
@@ -51,7 +48,7 @@ const withWallet = (OriginalComponent) => {
       // Handle the new chain.
       // Correctly handling chain changes can be complicated.
       // We recommend reloading the page unless you have good reason not to.
-      if (parseInt(chainID).toString === "97") {
+      if (parseInt(chainID).toString === process.env.REACT_APP_NETWORK_VERSION) {
         chain = "You are connected to BSC"
       } else {
         chain = "Please connect to BSC!!!"
@@ -62,10 +59,11 @@ const withWallet = (OriginalComponent) => {
     // Work with staking contract
     // const stakingContractAddr = "0x1FE470E4E533EeA525b2f2c34a9EbB995597C143"
     // const stakingContractAddr = "0xa49403Be3806eb19F27163D396f8A77b40b75C5f"
-    const stakingContractAddr = "0x0d0791b125689bA5152F4940dACD54dBfB850618"
+    // const stakingContractAddr = "0x0d0791b125689bA5152F4940dACD54dBfB850618"
     // const stakingContractAddr = "0xDDb3699BEF2519A06CF1783b8bb2C4d4576429f1"
+    const stakingContractAddr = process.env.REACT_APP_STK_CONTRACT
 
-    const web3 = new Web3("https://data-seed-prebsc-1-s1.binance.org:8545/")
+    const web3 = new Web3(process.env.REACT_APP_BSC_PROVIDER_LINK)
     // const web3 = new Web3("https://bsc-dataseed.binance.org/")
     web3.eth.setProvider(Web3.givenProvider) // chuyen sang MM provider, neu khong se gap loi Returned error: unknown account
     const stakingContract = new web3.eth.Contract(
@@ -78,7 +76,7 @@ const withWallet = (OriginalComponent) => {
     getyourStakedBalance()
     function getyourStakedBalance() {
       stakingContract.methods.stakeOf(account).call((error, result) => {
-        setYourStakedBalance((result / 1e18).toLocaleString("en-EN"))
+        setYourStakedBalance((result / 1e18))
       })
     }
 
@@ -126,7 +124,7 @@ const withWallet = (OriginalComponent) => {
     })
 
     // Control token contract
-    const tokenAddr = "0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83"
+    const tokenAddr = process.env.REACT_APP_TKN_CONTRACT
     // const tokenAddr = "0x8357c604c5533fa0053BeAaA1494Da552ceA38f7"
     const tokenNPO = new web3.eth.Contract(tokenContract.abi, tokenAddr)
 
