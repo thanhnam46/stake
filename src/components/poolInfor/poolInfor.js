@@ -12,16 +12,17 @@ function PoolInfor(props) {
           <li>
             Your staked balance{" "}
             <span className="boldText">
-              {props.yourStakedBalance.toLocaleString("en-EN")} SPO{" "}
+              {props.yourStakedBalance.toLocaleString("en-EN")} Cake-LP{" "}
             </span>
           </li>
           <li>
-            Staking cap <span className="boldText">{props.stakingCap} SPO</span>{" "}
+            Staking cap{" "}
+            <span className="boldText">{props.stakingCap} Cake-LP</span>{" "}
           </li>
           <li>
             Pool's total balance{" "}
             <span className="boldText">
-              {(props.stakedTotal / 1e18).toLocaleString("en-EN")} SPO
+              {(props.stakedTotal / 1e18).toLocaleString("en-EN")} Cake-LP
             </span>
           </li>
           <li>
