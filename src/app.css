@@ -26,7 +26,16 @@ code {
   justify-content: space-between;
   width: 920px;
 }
-
+.header {
+  display: flex;
+  height: 80px;
+  width: 20%;
+  box-sizing: border-box;
+  padding: 20px 40px;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #F2F2FB;
+}
 .selectWallet {
   position: fixed;
   /* Sit on top of the page content */

@@ -5,7 +5,7 @@ function Header(props) {
   
 
   return (
-    <header className="header">
+    <div className="header">
       <img
         className="logo"
         src="https://imgur.com/Qxw1soD.jpeg"
@@ -17,7 +17,7 @@ function Header(props) {
       <a href="https://staking.spores.app" className="links">
         Staking Options
       </a>
-    </header>
+    </div>
   );
 }
 

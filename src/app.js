@@ -8,8 +8,13 @@ import walletconnectLogo from "./assets/logos/walletconnectLogo.svg";
 import detectEthereumProvider from "@metamask/detect-provider";
 
 export default function () {
-  let display = false;
-  const [selectedAddress, setSelectedAddress] = useState("");
+  const [display, setDisplay] = useState(false);
+  function showWalletSelection() {
+    setDisplay(true);
+  }
+  const [selectedAddress, setSelectedAddress] = useState(
+    "Please connect your wallet first!"
+  );
   async function connectMM() {
     const accounts = await window.ethereum.request(
       { method: "eth_requestAccounts" },
@@ -21,12 +26,12 @@ export default function () {
     );
     setSelectedAddress(accounts[0]);
   }
-  if (
-    typeof window.ethereum === "undefined" ||
-    window.ethereum.selectedAddress == null
-  ) {
-    display = true;
+  function onAccountChange(provider) {
+    provider.on("accountsChanged", async () => {
+      setSelectedAddress(window.ethereum.selectedAddress);
+    });
   }
+
   const handleMetamask = async () => {
     console.log("connect to MM");
     const provider = await detectEthereumProvider();
@@ -36,9 +41,9 @@ export default function () {
 
       // From now on, this should always be true:
       // provider === window.ethereum
-
       connectMM();
-
+      onAccountChange(provider);
+      setDisplay(false);
       // Access the decentralized web!
 
       // Legacy providers may only have ethereum.sendAsync
@@ -50,6 +55,7 @@ export default function () {
       alert("Please install MetaMask Extention to your browser!");
     }
   };
+
   const handleWalletConnect = () => {
     console.log("connect to WL");
   };
@@ -82,7 +88,12 @@ export default function () {
       )}
       {!display && (
         <>
-          <Header account={selectedAddress} />
+          <div className="header">
+            <Header account={selectedAddress} />
+            <a onClick={showWalletSelection} className="links">
+              Connect Wallet
+            </a>
+          </div>
           <div className="container">
             <Stake
               formVisibility={formVisibility}

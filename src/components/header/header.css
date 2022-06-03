@@ -1,12 +1,10 @@
 .header {
-  display: flex;
   height: 80px;
   width: 100%;
   box-sizing: border-box;
   padding: 20px 40px;
-  justify-content: space-around;
-  align-items: center;
   background-color: #F2F2FB;
+  float: left;
 }
 
 .logo {
@@ -20,6 +18,8 @@
   color: #888;
   padding: 5px 10px;
   border: solid 1px #888;
+  width: 120px;
+  text-align: center;
 }
 
 .links:hover {
