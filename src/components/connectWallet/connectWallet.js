@@ -6,7 +6,7 @@ import walletconnectLogo from "../../assets/logos/walletconnectLogo.svg";
 export default function ConnectWallet() {
   return (
     <div className="selectWallet">
-      <p>Please select your wallet to connect with us!</p>
+      <p>Please connect your wallet with us!</p>
       <div className="walletWrapper">
         <img src={metamaskLogo} alt="Metamask" className="walletLogo" />
 

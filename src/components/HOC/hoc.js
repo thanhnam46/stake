@@ -7,9 +7,9 @@ const withWallet = (OriginalComponent) => {
   function NewComponent(props) {
     // Check Chain
     let chain = "";
-    if (typeof window.ethereum === "undefined") {
-      alert("Please install Metamask extension first!");
-    } else {
+    // if (typeof window.ethereum === "undefined") {
+      // alert("Please install Metamask extension first!");
+    // } else {
       if (
         window.ethereum.networkVersion === process.env.REACT_APP_NETWORK_VERSION
       ) {
@@ -19,7 +19,7 @@ const withWallet = (OriginalComponent) => {
           <span className="boldText">Please connect your Wallet to BSC!!!</span>
         );
       }
-    }
+    // }
 
     const formVisibility =
       window.ethereum.networkVersion === process.env.REACT_APP_NETWORK_VERSION;
@@ -147,29 +147,31 @@ const withWallet = (OriginalComponent) => {
     const tokenNPO = new web3.eth.Contract(tokenContract.abi, tokenAddr);
 
     return (
-      <OriginalComponent
-        formVisibility={formVisibility}
-        stakingContractAddr={stakingContractAddr}
-        account={account}
-        connectMM={connectMM}
-        onAccountChange={onAccountChange}
-        chain={chain}
-        poolName={poolName}
-        stakingCap={stakingCap}
-        stakedBalance={stakedBalance}
-        stakedTotal={stakedTotal}
-        setStakedBalance={setStakedBalance}
-        earlyWithdraw={earlyWithdraw}
-        yourStakedBalance={yourStakedBalance}
-        setYourStakedBalance={setYourStakedBalance}
-        stakingStart={stakingStart}
-        stakingEnds={stakingEnds}
-        maturityAt={maturityAt}
-        rewardState={rewardState}
-        stakingContract={stakingContract}
-        tokenNPO={tokenNPO}
-        getyourStakedBalance={getyourStakedBalance}
-      />
+      <>
+        <OriginalComponent
+          formVisibility={formVisibility}
+          stakingContractAddr={stakingContractAddr}
+          account={account}
+          connectMM={connectMM}
+          onAccountChange={onAccountChange}
+          chain={chain}
+          poolName={poolName}
+          stakingCap={stakingCap}
+          stakedBalance={stakedBalance}
+          stakedTotal={stakedTotal}
+          setStakedBalance={setStakedBalance}
+          earlyWithdraw={earlyWithdraw}
+          yourStakedBalance={yourStakedBalance}
+          setYourStakedBalance={setYourStakedBalance}
+          stakingStart={stakingStart}
+          stakingEnds={stakingEnds}
+          maturityAt={maturityAt}
+          rewardState={rewardState}
+          stakingContract={stakingContract}
+          tokenNPO={tokenNPO}
+          getyourStakedBalance={getyourStakedBalance}
+        />        
+      </>
     );
   }
   return NewComponent;
