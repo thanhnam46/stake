@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import "./Stake.css";
 import BigNumber from "bignumber.js";
 import MessageBoard from "../overlayMessageBoard/messageBoard";
-import withWallet from "../HOC/hoc";
 import EarlyRewardCalculator from "../rewardCalculator/earlyRewardCalculator";
 import MaturityReward from "../rewardCalculator/maturityRewardCalculator";
 
 function Stake(props) {
   // Call from HOC - Reuse functions/code fro Higher Order Component
-  props.onAccountChange();
+  // props.onAccountChange();
 
   // Stake & Unstake
   const [txHash, setTxHash] = useState("");
@@ -219,4 +218,4 @@ function Stake(props) {
     </div>
   );
 }
-export default withWallet(Stake);
+export default Stake;

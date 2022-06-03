@@ -9,7 +9,6 @@ export default function ConnectWallet() {
       <p>Please connect your wallet with us!</p>
       <div className="walletWrapper">
         <img src={metamaskLogo} alt="Metamask" className="walletLogo" />
-
         <img
           src={walletconnectLogo}
           alt="WalletConnect"
