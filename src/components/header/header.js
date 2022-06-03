@@ -1,9 +1,9 @@
-import React from "react"
-import "./header.css"
-import withWallet from "../HOC/hoc"
-function Header (props) {
-  const txLink = `https://bscscan.com/address/${props.account}#tokentxns`
-  props.onAccountChange()
+import React from "react";
+import "./header.css";
+import withWallet from "../HOC/hoc";
+function Header(props) {
+  const txLink = `https://bscscan.com/address/${props.account}#tokentxns`;
+  props.onAccountChange();
 
   return (
     <header className="header">
@@ -19,7 +19,7 @@ function Header (props) {
         Staking Options
       </a>
     </header>
-  )
+  );
 }
 
-export default withWallet(Header)
+export default withWallet(Header);
