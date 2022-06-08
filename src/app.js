@@ -7,7 +7,7 @@ import metamaskLogo from "./assets/logos/metamaskLogo.svg";
 import walletconnectLogo from "./assets/logos/walletconnectLogo.svg";
 import detectEthereumProvider from "@metamask/detect-provider";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-// import Web3 from "web3";
+import Web3 from "web3";
 export default function () {
   const [display, setDisplay] = useState(false);
   function showWalletSelection() {
@@ -65,17 +65,38 @@ export default function () {
     //  Create WalletConnect Provider
     provider = new WalletConnectProvider({
       rpc: {
-        97: "https://data-seed-prebsc-1-s1.binance.org:8545",
+        1: "https://eth-mainnet.public.blastapi.io", // ETH mainnet
+        4: "https://rinkeby.infura.io/v3/", // Rinkeby
+        97: "https://data-seed-prebsc-1-s1.binance.org:8545", // BSC testnet
+        56: "https://bsc-dataseed.binance.org/", // BSC mainnet
+        137: "https://polygon-rpc.com", // Polygon mainnet
       },
     });
-
+    console.log(provider);
     //  Enable session (triggers QR Code modal)
-    // await provider.enable();
-    // const web3 = new Web3(provider);
+    await provider.enable();
+
+    // Create Web3 instance
+    const web3 = new Web3(provider);
 
     // //  Get Accounts
-    // const accounts = await web3.eth.getAccounts();
-    // console.log(accounts);
+    const accounts = await web3.eth.getAccounts();
+    console.log(accounts);
+    setDisplay(false);
+    setSelectedAddress(accounts[0]);
+    provider.on("accountsChanged", (accounts) => {
+      console.log(`account was changed to ${accounts}`);
+      setSelectedAddress(accounts[0]);
+    });
+    // Subscribe to chainId change
+    provider.on("chainChanged", (chainId) => {
+      console.log(`Chain was change to ${chainId}`);
+    });
+
+    // Subscribe to session disconnection
+    provider.on("disconnect", (code, reason) => {
+      console.log(code, reason);
+    });
   };
 
   const formVisibility = true;
