@@ -6,7 +6,8 @@ import Footer from "./components/footer/footer";
 import metamaskLogo from "./assets/logos/metamaskLogo.svg";
 import walletconnectLogo from "./assets/logos/walletconnectLogo.svg";
 import detectEthereumProvider from "@metamask/detect-provider";
-
+import WalletConnectProvider from "@walletconnect/web3-provider";
+// import Web3 from "web3";
 export default function () {
   const [display, setDisplay] = useState(false);
   function showWalletSelection() {
@@ -31,10 +32,10 @@ export default function () {
       setSelectedAddress(window.ethereum.selectedAddress);
     });
   }
-
+  let provider;
   const handleMetamask = async () => {
     console.log("connect to MM");
-    const provider = await detectEthereumProvider();
+    provider = await detectEthereumProvider();
 
     if (provider) {
       console.log("Ethereum successfully detected!");
@@ -56,8 +57,25 @@ export default function () {
     }
   };
 
-  const handleWalletConnect = () => {
+  const disConnect = () => {
+    setSelectedAddress("Please connect your wallet first!");
+  };
+  const handleWalletConnect = async () => {
     console.log("connect to WL");
+    //  Create WalletConnect Provider
+    provider = new WalletConnectProvider({
+      rpc: {
+        97: "https://data-seed-prebsc-1-s1.binance.org:8545",
+      },
+    });
+
+    //  Enable session (triggers QR Code modal)
+    // await provider.enable();
+    // const web3 = new Web3(provider);
+
+    // //  Get Accounts
+    // const accounts = await web3.eth.getAccounts();
+    // console.log(accounts);
   };
 
   const formVisibility = true;
@@ -90,8 +108,22 @@ export default function () {
         <>
           <div className="header">
             <Header account={selectedAddress} />
-            <a onClick={showWalletSelection} className="links">
-              Connect Wallet
+            <a
+              onClick={
+                selectedAddress === "Please connect your wallet first!" ||
+                !selectedAddress
+                  ? showWalletSelection
+                  : disConnect
+              }
+              className="links"
+            >
+              {selectedAddress === "Please connect your wallet first!" ||
+              !selectedAddress
+                ? "Connect Wallet"
+                : `Disconect from ${selectedAddress.slice(
+                    0,
+                    6
+                  )}...${selectedAddress.slice(38, 42)}`}
             </a>
           </div>
           <div className="container">
