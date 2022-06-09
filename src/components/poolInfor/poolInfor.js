@@ -1,9 +1,7 @@
 import React from "react";
 import "./poolInfor.css";
-import withWallet from "../HOC/hoc";
 
 function PoolInfor(props) {
-  // props.onAccountChange()
 
   return (
     props.formVisibility && (
@@ -59,4 +57,4 @@ function PoolInfor(props) {
     )
   );
 }
-export default withWallet(PoolInfor);
+export default PoolInfor;
