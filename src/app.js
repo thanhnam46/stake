@@ -15,7 +15,7 @@ import tokenContract from './artifacts/contracts/tokenContract/tokenContract.jso
 export default function () {
     const [chain, setChain] = useState('');
     let formVisibility =
-        (chain == process.env.REACT_APP_NETWORK_VERSION) || (chain == process.env.REACT_APP_NETWORK_VERSION_HEX);
+        chain == process.env.REACT_APP_NETWORK_VERSION || chain == process.env.REACT_APP_NETWORK_VERSION_HEX;
     const stakingContractAddr = process.env.REACT_APP_STK_CONTRACT;
     const [display, setDisplay] = useState(false);
     const [provider, setProvider] = useState({});
@@ -106,7 +106,7 @@ export default function () {
 
     // Handle disconnect wallet logic
     const disconnectWallet = (provider) => {
-        setSelectedAddress('Please connect your wallet first!');        
+        setSelectedAddress('Please connect your wallet first!');
     };
 
     // Initialize web3 instance
@@ -182,39 +182,36 @@ export default function () {
         });
     }
 
-    async function getDATA() {
-        // Get users balance
-        await getyourStakedBalance();
-
-        // Pool Name
-        await getPoolName();
-
-        // Get staking cap
-        await getStakingCap();
-
-        // Get total staking amount on smc
-        await getStakedTotal();
-
-        // Get early withdraw
-        await getEarlyWithdraw();
-
-        // Get Staking start
-        await getStakingStart();
-
-        // Contribution close
-        await getStakingEnd();
-
-        // Maturity at
-        await getMaturityAt();
-
-        // Reward State
-        await getRewardState();
-    }
     if (
         selectedAddress !== 'Please connect your wallet first!' &&
         (chain == process.env.REACT_APP_NETWORK_VERSION) | (chain == process.env.REACT_APP_NETWORK_VERSION_HEX)
     ) {
-        getDATA();
+        // Get users balance
+        getyourStakedBalance();
+
+        // Pool Name
+        getPoolName();
+
+        // Get staking cap
+        getStakingCap();
+
+        // Get total staking amount on smc
+        getStakedTotal();
+
+        // Get early withdraw
+        getEarlyWithdraw();
+
+        // Get Staking start
+        getStakingStart();
+
+        // Contribution close
+        getStakingEnd();
+
+        // Maturity at
+        getMaturityAt();
+
+        // Reward State
+        getRewardState();
     }
 
     // Control token contract
