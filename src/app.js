@@ -126,6 +126,7 @@ export default function () {
     const [stakingEnds, setstakingEnds] = useState('');
     const [maturityAt, setMaturityAt] = useState('');
     const [rewardState, setRewardState] = useState('');
+    const [stakedBalance, setStakedBalance] = useState('');
 
     async function getyourStakedBalance() {
         await stakingContract.methods.stakeOf(selectedAddress).call((error, result) => {
@@ -176,9 +177,16 @@ export default function () {
         });
     }
 
+    async function getStakedBalance() {
+        await stakingContract.methods.stakedBalance().call((error, result) => {
+            setStakedBalance(result);
+        });
+    }
+
     async function getRewardState() {
         await stakingContract.methods.rewardState().call((error, result) => {
             setRewardState(result);
+            // console.log(rewardState);
         });
     }
 
@@ -263,6 +271,12 @@ export default function () {
                             tokenNPO={tokenNPO}
                             rewardState={rewardState}
                             stakingContract={stakingContract}
+                            earlyWithdraw={earlyWithdraw}
+                            stakingStart={stakingStart}
+                            stakingEnds={stakingEnds}
+                            maturityAt={maturityAt}
+                            stakedBalance={stakedBalance}
+                            stakedTotal={stakedTotal}
                         />
                         <PoolInfor
                             yourStakedBalance={yourStakedBalance}

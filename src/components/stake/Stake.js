@@ -88,14 +88,7 @@ function Stake(props) {
         } else {
             // handle amount (number bigint)
             amount = BigNumber(amount * 1e18).toFixed(0);
-            console.log(
-                props.maturityAt,
-                props.stakingEnds,
-                props.stakedBalance,
-                Date.now() / 1000,
-                props.rewardState.earlyWithdrawReward,
-                amount,
-            );
+            console.log(props.rewardState.rewardBalance, amount, props.stakedTotal);
             if (Date.now() > props.earlyWithdraw * 1000 && Date.now() < props.maturityAt * 1000) {
                 setMessageVisibility(true);
                 setMessage(

@@ -22,15 +22,15 @@ async function main() {
     },
   });
   const stakingContract = await FestakedWithReward.deploy(
-    "SPO traditional staking test 5", //Name
+    "SPO traditional staking test 6", //Name
     "0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83", //Testnet token address
     // "0x8357c604c5533fa0053BeAaA1494Da552ceA38f7", //Mainnet token address
     "0x476f7BcbC4058d4a0E8C0f9a6Df1fdcF675FAC83", //Testnet rewardTokenAddress_
     // "0x8357c604c5533fa0053BeAaA1494Da552ceA38f7", //Mainnet rewardTokenAddress_
-    "1652858723", //stakingStarts_
-    "1652859923", //stakingEnds_
-    "1652859924", //withdrawStarts_
-    "1653119123", //withdrawEnds_
+    "1654830000", //stakingStarts_
+    "1655607600", //stakingEnds_
+    "1656471600", //withdrawStarts_
+    "1656558000", //withdrawEnds_
     "100000000000000000000000000", //stakingCap_
     //{gasLimit: 10000000}    //rinkeby
     //{gasLimit: 10000000}    //bsc
