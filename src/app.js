@@ -119,16 +119,17 @@ export default function () {
     };
 
     // Handle disconnect wallet logic
-    const disconnectWallet = async () => {
+    const disconnectWallet = () => {
         if (cw == true) {
             setCw(false);
-            await provider.off('accountsChanged', () => {
-                setSelectedAddress('Please connect your wallet first! x2');
-            });
-            await provider.on('chainChanged', () => {
-                setChain('');
-            });
-            await provider.disconnect();
+            // provider.off('accountsChanged', () => {
+            //     setSelectedAddress('Please connect your wallet first!');
+            // });
+            // provider.off('chainChanged', () => {
+            //     setChain('');
+            // });
+            setSelectedAddress('Please connect your wallet first!');
+            provider.disconnect();
         } else {
             setSelectedAddress('Please connect your wallet first!');
         }
@@ -272,19 +273,11 @@ export default function () {
             {!display && (
                 <>
                     <div className="header">
-                        <Header account={selectedAddress} />
-                        <a
-                            onClick={
-                                selectedAddress === 'Please connect your wallet first!' || !selectedAddress
-                                    ? showWalletSelection
-                                    : disconnectWallet
-                            }
-                            className="links"
-                        >
-                            {selectedAddress === 'Please connect your wallet first!' || !selectedAddress
-                                ? 'Connect Wallet'
-                                : `Disconect from ${selectedAddress.slice(0, 6)}...${selectedAddress.slice(38, 42)}`}
-                        </a>
+                        <Header
+                            account={selectedAddress}
+                            showWalletSelection={showWalletSelection}
+                            disconnectWallet={disconnectWallet}
+                        />
                     </div>
                     <div className="container">
                         <Stake

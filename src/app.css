@@ -26,6 +26,7 @@ code {
   justify-content: space-between;
   width: 920px;
 }
+
 .header {
   display: flex;
   height: 80px;
@@ -36,6 +37,7 @@ code {
   align-items: center;
   background-color: #F2F2FB;
 }
+
 .selectWallet {
   position: fixed;
   /* Sit on top of the page content */
