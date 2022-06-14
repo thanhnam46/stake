@@ -20,6 +20,7 @@ export default function () {
     const [display, setDisplay] = useState(false);
     const [provider, setProvider] = useState({});
     const [selectedAddress, setSelectedAddress] = useState('Please connect your wallet first!');
+    const [cw, setCw] = useState('false');
     let web3;
     // Show/hide wallet selection box
     function showWalletSelection() {
@@ -49,6 +50,14 @@ export default function () {
             setChain(chain);
 
             // Get Accounts
+            await window.ethereum.request({
+                method: 'wallet_requestPermissions',
+                params: [
+                    {
+                        eth_accounts: {},
+                    },
+                ],
+            });
             const accounts = await provider.request({ method: 'eth_requestAccounts' }, (error) => {
                 if (error) {
                     console.log(error);
@@ -67,46 +76,62 @@ export default function () {
 
     // Handle walletConnect connection
     const handleWalletConnect = async () => {
-        //  Create WalletConnect Provider
-        const provider = new WalletConnectProvider({
-            rpc: {
-                1: 'https://eth-mainnet.public.blastapi.io', // ETH mainnet
-                4: 'https://rinkeby.infura.io/v3/', // Rinkeby
-                56: 'https://bsc-dataseed.binance.org/', // BSC mainnet
-                97: 'https://data-seed-prebsc-1-s1.binance.org:8545', // BSC testnet
-                137: 'https://polygon-rpc.com', // Polygon mainnet
-            },
-        });
-        setProvider(provider);
+        try {
+            setCw(true);
+            //  Create WalletConnect Provider
+            const provider = new WalletConnectProvider({
+                rpc: {
+                    1: 'https://eth-mainnet.public.blastapi.io', // ETH mainnet
+                    4: 'https://rinkeby.infura.io/v3/', // Rinkeby
+                    56: 'https://bsc-dataseed.binance.org/', // BSC mainnet
+                    97: 'https://data-seed-prebsc-1-s1.binance.org:8545', // BSC testnet
+                    137: 'https://polygon-rpc.com', // Polygon mainnet
+                },
+            });
+            setProvider(provider);
 
-        //  Enable session (triggers QR Code modal)
-        await provider.enable();
+            //  Enable session (triggers QR Code modal)
+            await provider.enable();
 
-        // Initialize web3 instance
-        web3 = new Web3(provider);
+            // Initialize web3 instance
+            web3 = new Web3(provider);
 
-        // Get chain
-        const chain = await web3.eth.net.getId();
-        setChain(chain);
+            // Get chain
+            const chain = await web3.eth.net.getId();
+            setChain(chain);
 
-        // Get Accounts
-        const accounts = await web3.eth.getAccounts();
-        setSelectedAddress(accounts[0]);
-        setDisplay(false);
+            // Get Accounts
+            const accounts = await web3.eth.getAccounts();
+            setSelectedAddress(accounts[0]);
+            setDisplay(false);
 
-        onAccountChange(provider);
-        onChainChange(provider);
+            onAccountChange(provider);
+            onChainChange(provider);
 
-        // Subscribe to session disconnection
-        provider.on('disconnect', (code, reason) => {
-            console.log(code, reason);
-            setSelectedAddress('Please connect your wallet first!');
-        });
+            // Subscribe to session disconnection
+            provider.on('disconnect', (code, reason) => {
+                console.log(code, reason);
+                setSelectedAddress('Please connect your wallet first!');
+            });
+        } catch (error) {
+            setCw(false);
+        }
     };
 
     // Handle disconnect wallet logic
-    const disconnectWallet = (provider) => {
-        setSelectedAddress('Please connect your wallet first!');
+    const disconnectWallet = async () => {
+        if (cw == true) {
+            setCw(false);
+            await provider.off('accountsChanged', () => {
+                setSelectedAddress('Please connect your wallet first! x2');
+            });
+            await provider.on('chainChanged', () => {
+                setChain('');
+            });
+            await provider.disconnect();
+        } else {
+            setSelectedAddress('Please connect your wallet first!');
+        }
     };
 
     // Initialize web3 instance

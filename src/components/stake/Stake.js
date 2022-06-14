@@ -39,7 +39,6 @@ function Stake(props) {
 
             // handle amount (number bigint)
             amount = BigNumber(amount * 1e18).toFixed(0);
-
             await props.tokenNPO.methods
                 .approve(props.stakingContractAddr, amount)
                 .send({ from: props.account })
