@@ -9,12 +9,12 @@
         Step 2: npm start
 
 # 3. Formular to calculate the reward amount
-1. Early withdraw
-        r = (earlyWithdrawReward / stakedTotal) * (block.timestamp - stakingEnds) / (withdrawEnds - stakingEnds)
-        reward = (1+r) * withdrawAmount
-2. Withdraw after close
-        reward = (rewBal*withdrawAmount)/stakedBalance
+        Early withdraw
+                r = (earlyWithdrawReward / stakedTotal) * (block.timestamp - stakingEnds) / (withdrawEnds - stakingEnds)
+                reward = (1+r) * withdrawAmount
+        Withdraw after close
+                reward = (rewBal*withdrawAmount)/stakedBalance
 
 # 4. NOTE
-1. Operator MUST add reward after the constribution period ends and before the early withdraw starts
-2. The APR is calculated based on the total amout of reward added
+        - Operator MUST add reward after the constribution period ends and before the early withdraw starts
+        - The APR is calculated based on the total amout of reward added
