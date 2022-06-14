@@ -35,7 +35,7 @@ function Stake(props) {
             alert('Pool was fulfilled, please stake into another pool!'); // check if pool was fulfilled
         } else {
             setMessageVisibility(true);
-            setMessage('Waiting for ALLOWANCE confirmation, please confirm it on your Metamask extension!');
+            setMessage('Waiting for ALLOWANCE confirmation, please confirm it on your Wallet!');
 
             // handle amount (number bigint)
             amount = BigNumber(amount * 1e18).toFixed(0);
@@ -46,7 +46,7 @@ function Stake(props) {
                     setMessage('Setting ALLOWANCE, please wait...!');
                 })
                 .on('receipt', function (receipt) {
-                    setMessage('Waiting for STAKING confirmation, please confirm it on your Metamask extension');
+                    setMessage('Waiting for STAKING confirmation, please confirm it on your Wallet');
                     props.stakingContract.methods
                         .stake(amount)
                         .send({ from: props.account })
@@ -105,7 +105,7 @@ function Stake(props) {
                 props.stakedTotal,
             )} SPO, if you withdraw after ${new Date(props.maturityAt * 1000).toLocaleString()}. 
 
-          If you still want to do the early withdraw, please confirm it on your Metamask extension`,
+          If you still want to do the early withdraw, please confirm it on your Wallet`,
                 );
             } else if (Date.now() > props.maturityAt * 1000) {
                 setMessageVisibility(true);
